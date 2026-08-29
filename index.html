@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codex Academy - Curso de Programación por Etapas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="space-bg">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div id="welcome-screen" class="view active">
+        <div class="welcome-card card">
+            <div class="logo-container">
+                <div class="logo-icon">🚀</div>
+                <h1 class="logo-text">Codex<span>Academy</span></h1>
+            </div>
+            <h2>Comienza tu Viaje en la Programación</h2>
+            <p>Aprende desde los cimientos lógicos hasta el dinamismo de JavaScript en un viaje interactivo por etapas. Resuelve desafíos, obtén calificaciones y desbloquea tu certificado.</p>
+            
+            <form id="welcome-form">
+                <div class="input-group">
+                    <label for="username">¿Cómo te llamas, futuro programador?</label>
+                    <input type="text" id="username" placeholder="Ingresa tu nombre..." required autocomplete="off" maxlength="25">
+                </div>
+                <button type="submit" class="btn btn-primary btn-glow">
+                    <span>Iniciar Misión</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-layout" class="layout hidden">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">🚀</div>
+                <span class="logo-text">Codex<span>Academy</span></span>
+            </div>
+
+            <div class="user-profile">
+                <div class="avatar-container">
+                    <div id="user-avatar" class="avatar">⚡</div>
+                </div>
+                <div class="user-info">
+                    <h3 id="display-name" class="user-name">Astronauta</h3>
+                    <span id="user-rank" class="user-rank">Iniciado de la Web</span>
+                </div>
+                <div class="xp-container">
+                    <div class="xp-header">
+                        <span>Nivel <strong id="user-level">1</strong></span>
+                        <span><span id="user-current-xp">0</span> / <span id="user-next-level-xp">100</span> XP</span>
+                    </div>
+                    <div class="xp-bar">
+                        <div id="xp-fill" class="xp-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="10" rx="1"/><rect width="7" height="5" x="3" y="14" rx="1"/></svg>
+                    <span>Panel de Control</span>
+                </a>
+                <a href="#" class="nav-item" data-target="lessons-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/><path d="M6 14h10"/></svg>
+                    <span>Lecciones</span>
+                </a>
+                <a href="#" class="nav-item" data-target="grades-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span>Calificaciones</span>
+                </a>
+                <a href="#" id="nav-certificate" class="nav-item disabled" data-target="certificate-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span>Certificado</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="api-key-config">
+                    <label for="gemini-api-key">🤖 Gemini API Key</label>
+                    <div class="api-key-input-group">
+                        <input type="password" id="gemini-api-key" placeholder="Pegar clave de API..." autocomplete="off">
+                        <button id="btn-save-key" title="Guardar Clave">✓</button>
+                    </div>
+                </div>
+                <button id="btn-reset-data" class="btn btn-outline btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>Reiniciar Progreso</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="main-header">
+                <button id="mobile-toggle" class="mobile-toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                </button>
+                <div class="header-title">
+                    <h2 id="page-title">Panel de Control</h2>
+                </div>
+                <div class="header-actions">
+                    <div class="badge badge-success">
+                        <span class="badge-dot"></span>
+                        <span id="header-status">Online</span>
+                    </div>
+                </div>
+            </header>
+
+            <section id="dashboard" class="content-section active">
+                <div class="welcome-banner">
+                    <div class="banner-text">
+                        <h1>¡Hola de nuevo, <span id="banner-username">Cadete</span>! 👋</h1>
+                        <p>Continúa tu aprendizaje. Has completado <strong id="progress-percentage">0%</strong> del curso general.</p>
+                    </div>
+                    <div class="banner-stats">
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-completed-stages">0/3</span>
+                            <span class="stat-label">Etapas Completas</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-avg-grade">-</span>
+                            <span class="stat-label">Promedio General</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-heading">Mapa del Curso por Etapas</h2>
+                <div id="categories-container" class="categories-container">
+                </div>
+            </section>
+
+            <!-- 2B. VISTA: DETALLE DE LECCIONES POR PESTAÑAS (TABS) -->
+            <section id="lessons-view" class="content-section">
+                <div class="lessons-layout">
+                    <!-- Panel izquierdo: Selector de Pestañas de la Etapa -->
+                    <div class="lessons-sidebar card">
+                        <div class="current-stage-badge" id="lesson-stage-title">
+                            Etapa 1: Cimientos
+                        </div>
+                        <h3>Contenido de la Etapa</h3>
+                        <div class="lessons-menu">
+                            <a href="#" class="lesson-menu-item active" data-tab="theory">
+                                <span>📚 1. Teoría</span>
+                            </a>
+                            <a href="#" class="lesson-menu-item" data-tab="examples">
+                                <span>💡 2. Ejemplos</span>
+                            </a>
+                            <a href="#" class="lesson-menu-item" data-tab="sandbox">
+                                <span>🧪 3. Práctica Sandbox</span>
+                            </a>
+                            <a href="#" class="lesson-menu-item" data-tab="quiz">
+                                <span>📝 4. Quiz de Etapa</span>
+                            </a>
+                            <a href="#" class="lesson-menu-item" data-tab="exam">
+                                <strong style="color: var(--accent-light)">🏁 5. Examen Final</strong>
+                            </a>
+                        </div>
+
+                        <!-- Panel de control de IA en Lección -->
+                        <div class="ai-toggle-card">
+                            <div class="ai-toggle-header">
+                                <span>✨ Potenciador IA</span>
+                            </div>
+                            <label class="ai-toggle-switch">
+                                <input type="checkbox" id="toggle-ai-content">
+                                <span class="ai-toggle-slider"></span>
+                            </label>
+                            <span class="ai-toggle-desc">Generar explicaciones y ejemplos extendidos con Gemini API.</span>
+                        </div>
+                    </div>
+
+                    <!-- Panel derecho: Tarjeta de Contenidos Activos -->
+                    <div class="lesson-content-card card">
+                        
+                        <!-- PESTAÑA 1: TEORÍA -->
+                        <div id="tab-content-theory" class="tab-content active">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+
+                        <!-- PESTAÑA 2: EJEMPLOS -->
+                        <div id="tab-content-examples" class="tab-content hidden">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+
+                        <!-- PESTAÑA 3: PRÁCTICA SANDBOX -->
+                        <div id="tab-content-sandbox" class="tab-content hidden">
+                            <div class="lesson-sandbox">
+                                <div class="sandbox-header">
+                                    <span>🧪 Laboratorio Rápido de Práctica Sandbox</span>
+                                </div>
+                                <div class="sandbox-editors">
+                                    <div class="sandbox-input-panel">
+                                        <label for="sandbox-code">Tu Código:</label>
+                                        <textarea id="sandbox-code" class="code-textarea" spellcheck="false"></textarea>
+                                    </div>
+                                    <div class="sandbox-output-panel">
+                                        <label>Resultado / Consola:</label>
+                                        <div id="sandbox-output" class="console-output">Consola limpia. Modifica el código de arriba y ejecútalo.</div>
+                                    </div>
+                                </div>
+                                <div class="sandbox-actions">
+                                    <button id="btn-sandbox-ai" class="btn btn-primary btn-sm btn-ai-action" style="margin-right: auto; background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);">
+                                        <span>🤖 Tutor de IA</span>
+                                    </button>
+                                    <button id="btn-sandbox-run" class="btn btn-secondary btn-sm">Ejecutar Código</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PESTAÑA 4: QUIZ DE ETAPA -->
+                        <div id="tab-content-quiz" class="tab-content hidden">
+                            <div class="quiz-container">
+                                <!-- Inyectado dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- PESTAÑA 5: EXAMEN DE ETAPA -->
+                        <div id="tab-content-exam" class="tab-content hidden">
+                            <!-- Contenido del examen (Reto de código o pregunta final) inyectado dinámicamente -->
+                        </div>
+
+                        <div class="lesson-footer">
+                            <button id="btn-prev-lesson" class="btn btn-outline">Anterior Etapa</button>
+                            <button id="btn-next-lesson" class="btn btn-primary">Siguiente Etapa</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="evaluation-view" class="content-section">
+                <div id="evaluation-container" class="evaluation-layout">
+                </div>
+            </section>
+
+            <section id="grades-view" class="content-section">
+                <div class="grades-card card">
+                    <div class="grades-header">
+                        <h2>Boletín Académico Oficial</h2>
+                        <p>Progreso académico y registro de evaluaciones por etapa.</p>
+                    </div>
+
+                    <div class="grades-summary-grid">
+                        <div class="summary-metric">
+                            <span class="metric-val" id="metric-completed-quizzes">0 / 3</span>
+                            <span class="metric-desc">Evaluaciones Realizadas</span>
+                        </div>
+                        <div class="summary-metric">
+                            <span class="metric-val" id="metric-average">0%</span>
+                            <span class="metric-desc">Calificación Promedio</span>
+                        </div>
+                        <div class="summary-metric">
+                            <span class="metric-val" id="metric-status">Cursando</span>
+                            <span class="metric-desc">Estado del Curso</span>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="grades-table">
+                            <thead>
+                                <tr>
+                                    <th>Etapa</th>
+                                    <th>Evaluación</th>
+                                    <th>Tipo de Prueba</th>
+                                    <th>Intentos</th>
+                                    <th>Calificación Máxima</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grades-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grades-footer-action" id="grades-cert-banner">
+                    </div>
+                </div>
+            </section>
+
+            <section id="certificate-view" class="content-section">
+                <div class="certificate-container">
+                    <div class="certificate-card" id="certificate-print-area">
+                        <div class="cert-border-outer">
+                            <div class="cert-border-inner">
+                                <div class="cert-badge">🎖️</div>
+                                <h1 class="cert-title">Certificado de Excelencia</h1>
+                                <p class="cert-subtitle">Otorgado con orgullo por Codex Academy a:</p>
+                                
+                                <h2 class="cert-student-name" id="cert-student-name">Nombre de Alumno</h2>
+                                
+                                <p class="cert-text">
+                                    Por haber completado y aprobado con éxito todas las etapas académicas del programa completo:
+                                    <br>
+                                    <strong class="cert-course-name">Curso de Programación Web: Cimientos, HTML, CSS y JavaScript</strong>
+                                </p>
+
+                                <div class="cert-meta-grid">
+                                    <div class="cert-meta-item">
+                                        <span class="meta-label">Promedio de Aprobación</span>
+                                        <span class="meta-value" id="cert-grade">95%</span>
+                                    </div>
+                                    <div class="cert-meta-item">
+                                        <span class="meta-label">Fecha de Graduación</span>
+                                        <span class="meta-value" id="cert-date">31/05/2026</span>
+                                    </div>
+                                    <div class="cert-meta-item">
+                                        <span class="meta-label">Credencial ID</span>
+                                        <span class="meta-value" id="cert-id">CDX-9482-A</span>
+                                    </div>
+                                </div>
+
+                                <div class="cert-signatures">
+                                    <div class="signature-box">
+                                        <div class="signature-line">Codex Engine</div>
+                                        <span>Director Académico</span>
+                                    </div>
+                                    <div class="signature-box">
+                                        <div class="signature-line">S. Dev</div>
+                                        <span>Instructor Principal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cert-actions">
+                        <button id="btn-print-cert" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg>
+                            <span>Imprimir o Guardar PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div id="confetti-overlay" class="confetti-overlay"></div>
+
+    <div id="ai-tutor-panel" class="ai-panel hidden">
+        <div class="ai-panel-content">
+            <div class="ai-panel-header">
+                <div class="ai-avatar">🤖</div>
+                <div class="ai-meta">
+                    <h3>Tutor Virtual Codex</h3>
+                    <span>Motorizado por Google Gemini</span>
+                </div>
+                <button id="btn-close-ai" class="btn-close">&times;</button>
+            </div>
+            <div class="ai-panel-body" id="ai-response-body">
+                <p>¡Hola! Soy tu tutor personal de inteligencia artificial. Si te encuentras atascado en un desafío de programación o en alguna lección, haz clic en "Tutor de IA" y te guiaré con explicaciones y pistas amigables sin regalarte la respuesta.</p>
+            </div>
+            <div class="ai-panel-footer">
+                <p class="api-disclaimer">Tus datos de código y errores se procesan de forma privada mediante la API de Gemini.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
