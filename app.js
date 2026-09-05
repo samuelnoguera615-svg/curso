@@ -767,7 +767,7 @@ function upgradeUserState(loaded) {
 function setupTabNavigation() {
     const tabs = document.querySelectorAll(".lesson-menu-item");
     tabs.forEach(tab => {
-        tab.addEventListenger("click", (e) => {
+        tab.addEventListener("click", (e) => {
             e.preventDefault();
             if (isShowingMegaExam) {
                 showToast("⚠️ Debes completar el Examen Total de la Sección primero.", "warning");
