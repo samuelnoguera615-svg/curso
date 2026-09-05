@@ -937,8 +937,15 @@ function setupEventListeners() {
             if (key) {
                 localStorage.setItem("gemini_api_key", key);
                 showToast("🔑 Llave API de Gemini guardada exitosamente.", "success");
+                if (toggleAiContent) {
+                    toggleAiContent.checked = true;
+                    loadStageContent();
+                }
             } else {
                 localStorage.removeItem("gemini_api_key");
+                if (toggleAiContent) {
+                    toggleAiContent.checked = false;
+                }
                 showToast("🔑 Llave API eliminada.", "info");
             }
         });
@@ -1295,7 +1302,7 @@ async function loadStageContent() {
             Escríbelo usando etiquetas HTML directas (ej: h2, p, pre, code). No devuelvas markdown.
             `;
             
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -1312,13 +1319,17 @@ async function loadStageContent() {
                             ${aiText}
                         </div>
                     `;
+                } else {
+                    throw new Error("La API no devolvió contenido generado.");
                 }
             } else {
-                tabContentTheory.innerHTML = stage.theory + "<p style='color:var(--danger)'>No se pudo cargar el contenido de IA. Mostrando teoría básica.</p>";
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.error?.message || `HTTP ${response.status}`;
+                tabContentTheory.innerHTML = stage.theory + `<p style="color:var(--danger)"><strong>No se pudo cargar Gemini:</strong> ${errorMessage}</p>`;
             }
         } catch(e) {
             console.error("Error al cargar teoría extendida:", e);
-            tabContentTheory.innerHTML = stage.theory;
+            tabContentTheory.innerHTML = stage.theory + `<p style="color:var(--danger)"><strong>Error de conexión con Gemini:</strong> ${e.message}</p>`;
         }
     }
 
