@@ -785,6 +785,10 @@ function switchTab(tabName) {
         return;
     }
 
+    if (tabName !== "exam") {
+        exitExamMode();
+    }
+
     activeTab = tabName;
     const tabs = document.querySelectorAll(".lesson-menu-item");
     tabs.forEach(tab => {
@@ -813,6 +817,12 @@ function switchTab(tabName) {
     } else if (tabName === "quiz") {
         renderStageQuiz();
     } else if (tabName === "exam") {
+        document.querySelectorAll(".tab-content").forEach(content => {
+            content.classList.remove("active");
+            content.classList.add("hidden");
+        });
+        tabContentExam.classList.remove("hidden");
+        tabContentExam.classList.add("active");
         renderStageExam();
     }
 }
