@@ -48,6 +48,9 @@ const CATEGORIES = [
     }
 ];
 
+// Índices de inicio de cada categoría (para desbloquear el principio de cada una)
+const CATEGORY_START_INDEXES = CATEGORIES.map(c => c.range[0]);
+
 // --- MOTOR DE GENERACIÓN PROCEDURAL (CURRICULUM ENGINE) ---
 function compileProceduralStage(index, category, concept, depth, difficulty, title) {
     const stageNum = index + 1;
@@ -877,7 +880,9 @@ let userState = {
     unlockedStages: new Array(1600).fill(false),
     activeView: "welcome-screen"
 };
-userState.unlockedStages[0] = true;
+
+// Desbloquear el INICIO de cada categoría (entrada libre)
+CATEGORY_START_INDEXES.forEach(i => { userState.unlockedStages[i] = true; });
 
 // --- CONFIGURACIÓN DE NIVELES ---
 const XP_PER_LEVEL = 100;
@@ -979,14 +984,16 @@ function upgradeUserState(loaded) {
     const grades = new Array(size).fill(null);
     const attempts = new Array(size).fill(0);
     const unlocked = new Array(size).fill(false);
-    unlocked[0] = true;
+    
+    // Desbloquear siempre el INICIO de cada categoría (entrada libre)
+    CATEGORY_START_INDEXES.forEach(i => { unlocked[i] = true; });
     
     if (loaded.completedStages) {
         for (let i = 0; i < Math.min(loaded.completedStages.length, size); i++) {
             completed[i] = loaded.completedStages[i];
             grades[i] = loaded.stageGrades ? loaded.stageGrades[i] : null;
             attempts[i] = loaded.stageAttempts ? loaded.stageAttempts[i] : 0;
-            unlocked[i] = loaded.unlockedStages ? loaded.unlockedStages[i] : false;
+            unlocked[i] = loaded.unlockedStages ? (unlocked[i] || loaded.unlockedStages[i]) : unlocked[i];
         }
     }
     
@@ -995,12 +1002,15 @@ function upgradeUserState(loaded) {
     loaded.stageAttempts = attempts;
     loaded.unlockedStages = unlocked;
     
-    // Asegurar desbloqueo consecutivo de etapas previas aprobadas
+    // Desbloqueo consecutivo: si se aprobó una etapa, se abre la siguiente
     for (let i = 0; i < size - 1; i++) {
         if (completed[i]) {
             loaded.unlockedStages[i + 1] = true;
         }
     }
+    
+    // Refuerzo final: por si acaso, asegurar inicios de categoría desbloqueados
+    CATEGORY_START_INDEXES.forEach(i => { loaded.unlockedStages[i] = true; });
     
     return loaded;
 }
@@ -1174,7 +1184,7 @@ function setupEventListeners() {
             return;
         }
 
-        if (userState.currentStageIndex < 999) {
+        if (userState.currentStageIndex < 1599) {
             userState.currentStageIndex += 1;
             isShowingMegaExam = false;
             saveProgress();
@@ -1379,12 +1389,7 @@ function renderDashboard() {
         statAvgGrade.textContent = "-";
     }
 
-    // Inicializar categoría abierta si el conjunto está vacío
-    if (openCategories.size === 0) {
-        const defaultCat = CATEGORIES.find(cat => userState.currentStageIndex >= cat.range[0] && userState.currentStageIndex <= cat.range[1]);
-        if (defaultCat) openCategories.add(defaultCat.id);
-    }
-
+    // Inicializar: todas las categorías CERRADAS por defecto
     categoriesContainer.innerHTML = "";
     CATEGORIES.forEach(cat => {
         const group = document.createElement("div");
@@ -2009,7 +2014,7 @@ function renderStageExam() {
         const overallBox = document.getElementById("exam-overall-result");
         if (passed) {
             userState.completedStages[userState.currentStageIndex] = true;
-            if (userState.currentStageIndex < 999) {
+            if (userState.currentStageIndex < 1599) {
                 const isNextCheckpoint = (userState.currentStageIndex + 1) % 100 === 0;
                 if (!isNextCheckpoint) {
                     userState.unlockedStages[userState.currentStageIndex + 1] = true;
@@ -2251,7 +2256,7 @@ function runSandboxCode() {
 // --- TUTOR DE INTELIGENCIA ARTIFICIAL (FLOTANTE) ---
 async function consultarTutorIA(contexto, codigo, errorOutput) {
     const panel = document.getElementById("ai-tutor-panel");
-    const aiMessage = document.getElementById("ai-tutor-message");
+    const aiMessage = document.getElementById("ai-response-body");
     const apiKey = localStorage.getItem("gemini_api_key");
 
     panel.classList.remove("hidden");
@@ -2310,7 +2315,7 @@ async function consultarTutorIA(contexto, codigo, errorOutput) {
 // --- BOLETÍN DE CALIFICACIONES ---
 function renderGrades() {
     const completedList = userState.completedStages.map((c, i) => c ? i : null).filter(i => i !== null);
-    metricCompletedQuizzes.textContent = `${completedList.length} / 1000`;
+    metricCompletedQuizzes.textContent = `${completedList.length} / 1600`;
 
     const approvedGrades = userState.stageGrades.filter(g => g !== null && g > 0);
     if (approvedGrades.length > 0) {
@@ -2370,7 +2375,7 @@ function renderGradesRows(start, end) {
             <td>Hoja de Evaluación</td>
             <td>${attempts}</td>
             <td>${maxGrade !== null ? maxGrade + '%' : '-'}</td>
-            <td><span class="grade-status ${stateClass}">${stateText}</span></td>
+            <td><span class="status-badge ${stateClass}">${stateText}</span></td>
         `;
         gradesTableBody.appendChild(row);
     }

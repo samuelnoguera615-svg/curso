@@ -243,6 +243,12 @@ body {
     border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
+.badge-accent {
+    background-color: var(--accent-glow);
+    color: var(--accent-light);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
 .badge-dot {
     width: 6px;
     height: 6px;
@@ -406,7 +412,7 @@ body {
     padding: 1.5rem 1rem;
     display: flex;
     flex-direction: column;
-    height: auto; /* Changed from 100vh to auto */
+    min-height: 100vh;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -546,12 +552,13 @@ body {
     cursor: not-allowed;
 }
 
-.sidebar-footer {
+.sidebar-bottom {
+    margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid var(--border);
 }
 
-.sidebar-footer button {
+.sidebar-bottom button {
     width: 100%;
 }
 
@@ -1002,37 +1009,6 @@ body {
     border-top: 1px solid var(--border);
     padding-top: 1.5rem;
     margin-top: 2rem;
-}
-
-body.exam-mode .sidebar,
-body.exam-mode .main-header,
-body.exam-mode .lessons-sidebar,
-body.exam-mode .lesson-footer {
-    display: none;
-}
-
-body.exam-mode .main-content {
-    min-height: 100vh;
-    padding: 0;
-    overflow-y: auto;
-}
-
-body.exam-mode .lessons-layout {
-    display: block;
-}
-
-body.exam-mode .lesson-content-card.exam-mode-content {
-    min-height: 100vh;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    padding: clamp(1rem, 4vw, 3rem);
-}
-
-body.exam-mode .exam-sheet {
-    width: 100%;
-    max-width: none;
-    border-radius: var(--border-radius-md);
 }
 
 /* -------------------------------------------------- */
@@ -2694,7 +2670,6 @@ body.exam-mode .exam-sheet {
     margin: 0 auto;
 }
 
-/* Asegurar que el layout principal no tenga sidebar en modo examen */
 body.exam-mode #main-layout {
     display: block !important;
 }
