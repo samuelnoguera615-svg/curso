@@ -995,6 +995,10 @@ function setupEventListeners() {
 
 // --- LOGICA DE NAVEGACIÓN Y VISTAS ---
 function switchView(targetId) {
+    if (targetId !== "lessons-view") {
+        exitExamMode();
+    }
+
     userState.activeView = targetId;
     saveProgress();
 
@@ -1269,6 +1273,8 @@ async function loadStageContent() {
         renderMegaExamView();
         return;
     }
+
+    exitExamMode();
 
     // Menú de pestañas
     lessonsMenu.innerHTML = `
