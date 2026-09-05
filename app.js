@@ -1,8 +1,8 @@
 /**
- * Codex Academy - Lógica Principal (Versión 1000 Etapas con Tutoría IA)
+ * Codex Academy - Lógica Principal (Versión 1600 Etapas con Tutoría IA)
  */
 
-// --- CONFIGURACIÓN DE CATEGORÍAS DEL CURSO (1000 ETAPAS) ---
+// --- CONFIGURACIÓN DE CATEGORÍAS DEL CURSO (1600 ETAPAS) ---
 const CATEGORIES = [
     {
         id: "cat-logic",
@@ -33,6 +33,18 @@ const CATEGORIES = [
         title: "5. JS & Java con HTML",
         subtitle: "Etapas 701 a 1000 • Interactividad y Programación Servidor",
         range: [700, 999]
+    },
+    {
+        id: "cat-python",
+        title: "6. Python de Cero a Experto",
+        subtitle: "Etapas 1001 a 1300 • Automatización, Datos y Backend con Python",
+        range: [1000, 1299]
+    },
+    {
+        id: "cat-c-cpp",
+        title: "7. C y C++ Desarrollo de Sistemas",
+        subtitle: "Etapas 1301 a 1600 • Memoria, Punteros, OOP y Alto Rendimiento",
+        range: [1300, 1599]
     }
 ];
 
@@ -77,6 +89,28 @@ selector {
     } else if (category === "html_css_conjunto") {
         theory += `
             <p>La integración de HTML y CSS es clave para crear componentes profesionales. Al construir un/a <strong>${concept}</strong>, trabajamos de forma progresiva aplicando un flujo de diseño que adapta el contenido a pantallas móviles y de escritorio.</p>
+        `;
+    } else if (category === "python") {
+        theory += `
+            <p>Python es el lenguaje versátil por excelencia: se usa en automatización, ciencia de datos, inteligencia artificial, backend web y scripting. Su sintaxis limpia con indentación obligatoria fomenta código legible.</p>
+            <div class="info-note">
+                <strong>🐍 Zen de Python:</strong> "Lo simple es mejor que lo complejo. Si la implementación es difícil de explicar, es una mala idea."
+            </div>
+            <pre><code># Hola mundo en Python
+print("Hola, Codex Academy!")</code></pre>
+        `;
+    } else if (category === "c_cpp") {
+        theory += `
+            <p>C y C++ son lenguajes compilados de bajo nivel que permiten control directo sobre la memoria y el hardware. Son la base de sistemas operativos, motores de juego (Unreal), navegadores y software de alto rendimiento.</p>
+            <div class="info-note">
+                <strong>⚙️ Dato Clave:</strong> C es procedural, C++ añade Programación Orientada a Objetos, plantillas (templates) y la STL (Standard Template Library).
+            </div>
+            <pre><code>// Hola mundo en C
+#include &lt;stdio.h&gt;
+int main() {
+    printf("Hola, Codex Academy!\\n");
+    return 0;
+}</code></pre>
         `;
     } else {
         theory += `
@@ -167,6 +201,57 @@ if (edad >= 18 && tieneLicencia) {
     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 </style>`;
+    } else if (category === "python") {
+        examples += `
+            <pre><code># Ejemplo Python: Función con ${concept}
+def saludar(nombre):
+    return f"Hola, {nombre}! Aprendiendo ${concept}"
+
+print(saludar("Codex"))</code></pre>
+        `;
+        sandboxCode = `# Sandbox Python - ${concept}
+# Escribe y ejecuta código Python aquí
+
+def calcular_cuadrado(n):
+    return n ** 2
+
+numeros = [1, 2, 3, 4, 5]
+resultados = [calcular_cuadrado(x) for x in numeros]
+print(f"Cuadrados: {resultados}")
+print(f"Suma total: {sum(resultados)}")`;
+    } else if (category === "c_cpp") {
+        examples += `
+            <pre><code>// Ejemplo C/C++ con ${concept}
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout << "Aprendiendo ${concept} en Codex Academy!" << endl;
+    return 0;
+}</code></pre>
+        `;
+        sandboxCode = `// Sandbox C/C++ - ${concept}
+// Escribe tu código C/C++ aquí
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+int main() {
+    cout << "Factorial de 5: " << factorial(5) << endl;
+
+    vector<int> nums = {10, 20, 30, 40, 50};
+    int suma = 0;
+    for (int n : nums) suma += n;
+    cout << "Suma del vector: " << suma << endl;
+
+    return 0;
+}`;
     } else {
         examples += `
             <pre><code>// Integración cliente-servidor conceptual
@@ -314,6 +399,46 @@ test();`;
         ];
         p1Q2Correct = 0;
         p1Q2Explanation = `El responsive design se logra con media queries y unidades relativas.`;
+    } else if (category === "python") {
+        p1Q1 = `En Python, al abordar '${concept}' (${depth}), ¿qué característica distintiva del lenguaje es correcta?`;
+        p1Q1Options = [
+            `Usa indentación obligatoria (4 espacios por bloque) lo que fuerza código legible.`,
+            `Requiere punto y coma (;) al final de cada línea obligatoriamente.`,
+            `Es un lenguaje compilado directamente a ensamblador sin intérprete.`,
+            `No permite el uso de funciones ni módulos externos.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `La indentación en Python es sintáctica, no meramente estética, garantizando código ordenado.`;
+
+        p1Q2 = `Respecto a tipos de datos y estructuras en Python aplicados a '${concept}', ¿cuál es la buena práctica?`;
+        p1Q2Options = [
+            `Usar listas [], tuplas (), diccionarios {} y conjuntos set() según la necesidad del caso.`,
+            `Guardar todos los datos siempre en variables globales sin funciones.`,
+            `Evitar por completo el uso de excepciones try/except.`,
+            `Escribir todos los nombres de variables en mayúsculas.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `Python ofrece estructuras nativas potentes: elegir la correcta optimiza el código.`;
+    } else if (category === "c_cpp") {
+        p1Q1 = `En C/C++ al trabajar con '${concept}' (${depth}), ¿qué afirmación sobre la memoria es fundamental?`;
+        p1Q1Options = [
+            `El programador gestiona manualmente la memoria con malloc/free (C) o new/delete (C++), evitando fugas.`,
+            `El recolector de basura (garbage collector) libera la memoria automáticamente en C/C++.`,
+            `No existen punteros ni acceso a direcciones de memoria.`,
+            `Todas las variables se almacenan exclusivamente en el segmento de datos globales.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `C/C++ son lenguajes sin GC: la gestión manual de memoria es responsabilidad del desarrollador.`;
+
+        p1Q2 = `Al desarrollar software de alto rendimiento con '${concept}' en C++, ¿qué principio es clave?`;
+        p1Q2Options = [
+            `Usar paso por referencia (&), evitar copias innecesarias y optimizar hot paths.`,
+            `Hacer casting implícito entre todos los tipos sin importar la pérdida de datos.`,
+            `Nunca usar la STL (Standard Template Library) para nada.`,
+            `Declarar todas las variables con 'auto' sin tipar ninguna estructura.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `En C++ la eficiencia importa: referencias, move semantics y STL optimizada son pilares.`;
     } else {
         p1Q1 = `En el flujo interactivo de '${concept}' (${depth}), ¿cómo interactúa JavaScript con el DOM o el backend?`;
         p1Q1Options = [
@@ -386,6 +511,26 @@ test();`;
         p2ItemB_Expected = ["flex", "inline-flex", "grid", "block"];
         p2ItemB_Placeholder = "Ej: flex";
         p2ItemB_Explanation = "El valor 'flex' activa el contenedor flexible Flexbox.";
+    } else if (category === "python") {
+        p2ItemA_Prompt = `Pregunta A: Escribe la función nativa de Python para <strong>mostrar texto/valores por consola</strong> (sin paréntesis ni argumentos):`;
+        p2ItemA_Expected = ["print", "print()", "imprimir", "echo"];
+        p2ItemA_Placeholder = "Ej: print";
+        p2ItemA_Explanation = "La función 'print()' envía la salida estándar en Python.";
+
+        p2ItemB_Prompt = `Pregunta B: Escribe la palabra clave que declara una <strong>función</strong> en Python:`;
+        p2ItemB_Expected = ["def", "function", "func", "define"];
+        p2ItemB_Placeholder = "Ej: def";
+        p2ItemB_Explanation = "En Python las funciones se declaran con 'def nombre_funcion(parametros):'.";
+    } else if (category === "c_cpp") {
+        p2ItemA_Prompt = `Pregunta A: Escribe la función de <strong>entrada/salida estándar</strong> en C (formateada, usada con printf):`;
+        p2ItemA_Expected = ["printf", "scanf", "cout", "cin", "fprintf"];
+        p2ItemA_Placeholder = "Ej: printf";
+        p2ItemA_Explanation = "printf() (de stdio.h) es la función de salida formateada en C. En C++ se usa cout.";
+
+        p2ItemB_Prompt = `Pregunta B: Escribe el <strong>operador de desreferencia</strong> de puntero en C/C++ (para acceder al valor apuntado):`;
+        p2ItemB_Expected = ["*", "&", "->", ".", "deref"];
+        p2ItemB_Placeholder = "Ej: *";
+        p2ItemB_Explanation = "El '*' delante de un puntero lee/escribe el valor en la dirección apuntada. '&' obtiene la dirección.";
     } else {
         p2ItemA_Prompt = `Pregunta A: Escribe el método de <code>document</code> para seleccionar un elemento por su selector CSS:`;
         p2ItemA_Expected = ["queryselector", "document.queryselector", "getelementbyid", "queryselectorall"];
@@ -401,8 +546,13 @@ test();`;
     // Parte III: Reto Práctico de Desarrollo de Código (40 pts)
     let p3Title = `Desafío Práctico: ${concept}`;
     let p3Lang = (category === "html" || category === "html_css_conjunto") ? "html" :
-                 (category === "css") ? "css" : "javascript";
-    let p3Filename = (p3Lang === "html") ? "index.html" : (p3Lang === "css") ? "styles.html" : "main.js";
+                 (category === "css") ? "css" :
+                 (category === "python") ? "python" :
+                 (category === "c_cpp") ? "cpp" : "javascript";
+    let p3Filename = (p3Lang === "html") ? "index.html" :
+                     (p3Lang === "css") ? "styles.html" :
+                     (p3Lang === "python") ? "main.py" :
+                     (p3Lang === "cpp") ? "main.cpp" : "main.js";
     let p3Initial = "";
     let p3Instructions = "";
     let p3Validate = null;
@@ -431,6 +581,46 @@ test();`;
                 return { success: true, msg: "Reglas CSS para '.caja-examen' validadas correctamente." };
             } catch(e) {
                 return { success: false, msg: e.message };
+            }
+        };
+    } else if (category === "python") {
+        p3Instructions = `<p>Escribe o completa la función <code>solucion_examen(x)</code> en Python que reciba un número entero y devuelva su <strong>cuadrado</strong> (<code>x * x</code> o <code>x ** 2</code>).</p>`;
+        p3Initial = `# Examen Práctico Python: ${concept}\ndef solucion_examen(x):\n    # Devuelve el cuadrado de x\n    return x ** 2\n\n# Prueba rápida (no modificar)\nif __name__ == "__main__":\n    print(f"solucion_examen(3) = {solucion_examen(3)}")\n`;
+        p3Validate = function(code) {
+            try {
+                const lower = code.toLowerCase().replace(/\s+/g, '');
+                if (!lower.includes("defsolucion_examen")) {
+                    return { success: false, msg: "Falta declarar la función 'def solucion_examen(x):'." };
+                }
+                if (!lower.includes("return") || (!lower.includes("x**2") && !lower.includes("x*x"))) {
+                    return { success: false, msg: "La función debe retornar el cuadrado (x**2 o x*x)." };
+                }
+                return { success: true, msg: "Solución Python detectada correctamente. ¡Buen trabajo!" };
+            } catch(e) {
+                return { success: false, msg: "Error validando Python: " + e.message };
+            }
+        };
+    } else if (category === "c_cpp") {
+        p3Instructions = `<p>Crea una función C/C++ <code>int solucion_examen(int x)</code> que reciba un entero y devuelva su <strong>factorial iterativo</strong> (o al menos contenga la estructura básica con include y main).</p>`;
+        p3Initial = `// Examen Práctico C/C++: ${concept}\n#include <iostream>\nusing namespace std;\n\nint solucion_examen(int x) {\n    // Calcula factorial (o estructura básica)\n    int resultado = 1;\n    for (int i = 2; i <= x; i++) {\n        resultado *= i;\n    }\n    return resultado;\n}\n\nint main() {\n    cout << "solucion_examen(5) = " << solucion_examen(5) << endl;\n    return 0;\n}\n`;
+        p3Validate = function(code) {
+            try {
+                const lower = code.toLowerCase().replace(/\s+/g, '');
+                const hasInclude = lower.includes("#include") || lower.includes("iostream") || lower.includes("stdio.h");
+                const hasFunc = lower.includes("intsolucion_examen") || lower.includes("solucion_examen(int");
+                const hasMain = lower.includes("intmain()") || lower.includes("intmain(void)");
+                if (!hasInclude) {
+                    return { success: false, msg: "Falta incluir una librería estándar (#include <iostream> o <stdio.h>)." };
+                }
+                if (!hasFunc) {
+                    return { success: false, msg: "Falta declarar la función 'solucion_examen'." };
+                }
+                if (!hasMain) {
+                    return { success: false, msg: "Falta la función int main() punto de entrada." };
+                }
+                return { success: true, msg: "Estructura C/C++ validada (include + función + main). ¡Excelente!" };
+            } catch(e) {
+                return { success: false, msg: "Error validando C/C++: " + e.message };
             }
         };
     } else {
@@ -567,8 +757,42 @@ function generateCourseData() {
         "Java JSP Formularios", "Java JDBC Bases de Datos", "Java Guardar en BD", "Java Retornar JSON",
         "Java Servlets Fetch", "Java Proyecto Web Completo"
     ];
+
+    // 6. PYTHON (1001 to 1300) -> 300 stages
+    const pythonConcepts = [
+        "Python Instalación y Entorno", "Python Hola Mundo y Print", "Python Variables y Tipos", "Python Enteros y Flotantes",
+        "Python Strings y Cadenas", "Python Booleanos y None", "Python Operadores Aritméticos", "Python Operadores Comparación",
+        "Python Operadores Lógicos", "Python Entrada Input()", "Python If Elif Else", "Python Anidamiento Condicional",
+        "Python Operador Ternario", "Python Ciclo For Básico", "Python range() y Enumerate", "Python Ciclo While",
+        "Python Break y Continue", "Python Listas []", "Python Índices y Slicing", "Python Métodos de Listas",
+        "Python List Comprehension", "Python Tuplas ()", "Python Conjuntos set()", "Python Diccionarios {}",
+        "Python Métodos de Diccionarios", "Python Funciones def", "Python Parámetros y Argumentos", "Python *args y **kwargs",
+        "Python Valor vs Referencia", "Python Return y Múltiples Valores", "Python Funciones Lambda", "Python map() filter() reduce()",
+        "Python Módulos e Import", "Python Paquetes y Pip", "Python Manejo de Errores try/except", "Python Excepciones Personalizadas",
+        "Python Archivos Open/Read/Write", "Python Context Manager with", "Python Clases y Objetos POO", "Python Constructor __init__",
+        "Python Atributos y Métodos", "Python Herencia", "Python Polimorfismo", "Python Encapsulamiento",
+        "Python Decoradores", "Python Generadores yield", "Python Iteradores", "Python Datetime y Fechas",
+        "Python Expresiones Regulares", "Python Requests HTTP", "Python JSON con json", "Python Proyecto Completo"
+    ];
+
+    // 7. C y C++ (1301 to 1600) -> 300 stages
+    const cCppConcepts = [
+        "C Instalación Compilador GCC", "C Hola Mundo", "C Variables y Tipos Primitivos", "C int float char double",
+        "C Printf y Scanf", "C Operadores Aritméticos", "C Operadores Lógicos", "C If Else Switch",
+        "C Ciclos For While Do-While", "C Break Continue", "C Funciones y Prototipos", "C Parámetros por Valor",
+        "C Arrays Unidimensionales", "C Arrays Multidimensionales", "C Strings como char[]", "C Funciones string.h",
+        "C Punteros * y Direcciones &", "C Aritmética de Punteros", "C Punteros y Arrays", "C Paso por Referencia",
+        "C Structs y Estructuras", "C Typedef y Unions", "C Memoria Dinámica malloc", "C calloc realloc free",
+        "C Archivos fopen fread fwrite", "C Preprocesador #define", "C Recursividad", "C Punteros a Función",
+        "C++ Hola Mundo y Namespaces", "C++ iostream cin cout", "C++ Referencias &", "C++ Sobrecarga Funciones",
+        "C++ Default Arguments", "C++ Clases y Objetos", "C++ Constructores y Destructores", "C++ Encapsulamiento private",
+        "C++ Herencia public protected", "C++ Polimorfismo Virtual", "C++ Sobrecarga Operadores", "C++ Templates",
+        "C++ STL Vector List Map", "C++ STL Algorithm", "C++ Smart Pointers", "C++ Lambda Expressions",
+        "C++ Move Semantics", "C++ Excepciones try catch", "C++ std::string", "C++ Filesystem fstream",
+        "C++ Multithreading hilo", "C++ Proyecto Sistema Completo"
+    ];
     
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 1600; i++) {
         let category = "";
         let title = "";
         let concept = "";
@@ -605,7 +829,7 @@ function generateCourseData() {
             depth = steps[gIdx % 8];
             difficulty = "Intermedia";
             title = `Proyecto: ${concept} (${depth})`;
-        } else {
+        } else if (i < 1000) {
             category = "js_java_html";
             const gIdx = i - 700;
             concept = jsJavaConcepts[Math.floor(gIdx / 6)];
@@ -613,6 +837,22 @@ function generateCourseData() {
             depth = depths[gIdx % 6];
             difficulty = "Avanzada";
             title = `JS & Java: ${concept} - ${depth}`;
+        } else if (i < 1300) {
+            category = "python";
+            const gIdx = i - 1000;
+            concept = pythonConcepts[Math.floor(gIdx / 6)];
+            const depths = ["Concepto Básico", "Sintaxis Detallada", "Ejemplo Práctico", "Casos Reales", "Errores Comunes", "Proyecto Completo"];
+            depth = depths[gIdx % 6];
+            difficulty = (gIdx < 150) ? "Intermedia" : "Avanzada";
+            title = `Python: ${concept} - ${depth}`;
+        } else {
+            category = "c_cpp";
+            const gIdx = i - 1300;
+            concept = cCppConcepts[Math.floor(gIdx / 6)];
+            const depths = ["Fundamento C/C++", "Sintaxis y Semántica", "Ejemplo Práctico", "Depuración", "Errores Comunes", "Proyecto Completo"];
+            depth = depths[gIdx % 6];
+            difficulty = "Avanzada";
+            title = `C/C++: ${concept} - ${depth}`;
         }
         
         const stageContent = compileProceduralStage(i, category, concept, depth, difficulty, title);
@@ -631,10 +871,10 @@ let userState = {
     level: 1,
     currentStageIndex: 0,
     currentLessonIndex: 0,
-    completedStages: new Array(1000).fill(false),
-    stageGrades: new Array(1000).fill(null), // grades out of 100
-    stageAttempts: new Array(1000).fill(0),
-    unlockedStages: new Array(1000).fill(false), // Stage 1 unlocked at start
+    completedStages: new Array(1600).fill(false),
+    stageGrades: new Array(1600).fill(null),
+    stageAttempts: new Array(1600).fill(0),
+    unlockedStages: new Array(1600).fill(false),
     activeView: "welcome-screen"
 };
 userState.unlockedStages[0] = true;
@@ -712,7 +952,9 @@ let categoryPages = {
     "cat-html": 0,
     "cat-css": 0,
     "cat-html-css-conjunto": 0,
-    "cat-js-java-html": 0
+    "cat-js-java-html": 0,
+    "cat-python": 0,
+    "cat-c-cpp": 0
 };
 let currentQuizSelectedAnswer = null;
 let isShowingMegaExam = false;
@@ -730,9 +972,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// --- UPGRADE DEL ESTADO (SOPORTA 1000 ETAPAS DESDE 3 O 50 ANTERIORES) ---
+// --- UPGRADE DEL ESTADO (SOPORTA 1600 ETAPAS DESDE 3 O 50 ANTERIORES) ---
 function upgradeUserState(loaded) {
-    const size = 1000;
+    const size = 1600;
     const completed = new Array(size).fill(false);
     const grades = new Array(size).fill(null);
     const attempts = new Array(size).fill(0);
@@ -882,7 +1124,7 @@ function setupEventListeners() {
 
     // Reiniciar Progreso
     btnResetData.addEventListener("click", () => {
-        if (confirm("⚠️ ¿Estás seguro de que deseas borrar todo tu progreso, notas y XP de las 1000 etapas? Esta acción no se puede deshacer.")) {
+        if (confirm("⚠️ ¿Estás seguro de que deseas borrar todo tu progreso, notas y XP de las 1600 etapas? Esta acción no se puede deshacer.")) {
             localStorage.removeItem("codex_academy_user");
             userState = {
                 name: "",
@@ -890,10 +1132,10 @@ function setupEventListeners() {
                 level: 1,
                 currentStageIndex: 0,
                 currentLessonIndex: 0,
-                completedStages: new Array(1000).fill(false),
-                stageGrades: new Array(1000).fill(null),
-                stageAttempts: new Array(1000).fill(0),
-                unlockedStages: new Array(1000).fill(false),
+                completedStages: new Array(1600).fill(false),
+                stageGrades: new Array(1600).fill(null),
+                stageAttempts: new Array(1600).fill(0),
+                unlockedStages: new Array(1600).fill(false),
                 activeView: "welcome-screen"
             };
             userState.unlockedStages[0] = true;
@@ -938,7 +1180,7 @@ function setupEventListeners() {
             saveProgress();
             switchView("lessons-view");
         } else {
-            showToast("🎉 ¡Felicidades! Has completado las 1000 etapas del curso.", "success");
+            showToast("🎉 ¡Felicidades! Has completado las 1600 etapas del curso.", "success");
             switchView("dashboard");
         }
     });
@@ -1123,10 +1365,10 @@ function triggerLevelUpEffects() {
 // --- RENDERIZAR DASHBOARD CON CONTROL DE ACORDEÓN Y PAGINACIÓN ---
 function renderDashboard() {
     const completedCount = userState.completedStages.filter(Boolean).length;
-    statCompletedStages.textContent = `${completedCount}/1000`;
+    statCompletedStages.textContent = `${completedCount}/1600`;
     
     // Porcentaje global
-    const overallPercent = Math.min(100, Math.round((completedCount / 1000) * 100));
+    const overallPercent = Math.min(100, Math.round((completedCount / 1600) * 100));
     progressPercentage.textContent = `${overallPercent}%`;
 
     const approvedGrades = userState.stageGrades.filter(g => g !== null && g > 0);
@@ -2083,10 +2325,10 @@ function renderGrades() {
 
     renderGradesRows(0, 49); // Primeras 50 etapas
 
-    if (completedList.length === 1000) {
+    if (completedList.length === 1600) {
         gradesCertBanner.innerHTML = `
             <div class="card" style="border: 2px solid var(--accent); background: rgba(139, 92, 246, 0.08); text-align:center; padding: 1.5rem;">
-                <h3>🎓 ¡Has completado todas las 1000 etapas del curso!</h3>
+                <h3>🎓 ¡Has completado todas las 1600 etapas del curso!</h3>
                 <p style="margin: 0.5rem 0 1rem 0;">Tu diploma oficial de graduación está listo para su emisión.</p>
                 <button class="btn btn-primary" onclick="switchView('certificate-view')">Ver mi Certificado</button>
             </div>
@@ -2094,7 +2336,7 @@ function renderGrades() {
     } else {
         gradesCertBanner.innerHTML = `
             <p style="color: var(--text-muted); font-size: 0.9rem;">
-                🔓 Completa las 1000 etapas curriculares de Codex Academy para desbloquear tu certificado oficial.
+                🔓 Completa las 1600 etapas curriculares de Codex Academy para desbloquear tu certificado oficial.
             </p>
         `;
     }
@@ -2173,11 +2415,12 @@ function triggerConfetti() {
     const colors = ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#ffffff"];
     for (let i = 0; i < 70; i++) {
         const piece = document.createElement("div");
-        piece.className = "confetti-piece";
+        piece.className = "confetti-particle";
         piece.style.left = `${Math.random() * 100}%`;
+        piece.style.top = `-10px`;
+        piece.style.animationDuration = `${2 + Math.random() * 2}s`;
         piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDelay = `${Math.random() * 2}s`;
-        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        piece.style.animationDelay = `${Math.random() * 1.5}s`;
         confettiOverlay.appendChild(piece);
     }
     
