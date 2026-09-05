@@ -1302,7 +1302,7 @@ async function loadStageContent() {
             Escríbelo usando etiquetas HTML directas (ej: h2, p, pre, code). No devuelvas markdown.
             `;
             
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -2002,7 +2002,7 @@ async function consultarTutorIA(contexto, codigo, errorOutput) {
         Explica de manera pedagógica y alentadora en español cuál es el error o qué le falta, dándole una pista clara sin darle la respuesta completa copiada, para que aprenda a razonar. Sé breve (máximo 2 párrafos). Formatea con etiquetas HTML directas (p, strong, code).
         `;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
