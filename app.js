@@ -767,7 +767,7 @@ function upgradeUserState(loaded) {
 function setupTabNavigation() {
     const tabs = document.querySelectorAll(".lesson-menu-item");
     tabs.forEach(tab => {
-        tab.addEventListener("click", (e) => {
+        tab.addEventListenger("click", (e) => {
             e.preventDefault();
             if (isShowingMegaExam) {
                 showToast("⚠️ Debes completar el Examen Total de la Sección primero.", "warning");
@@ -780,6 +780,11 @@ function setupTabNavigation() {
 }
 
 function switchTab(tabName) {
+    if (document.body.classList.contains("exam-mode") && tabName !== "exam") {
+        showToast("⚠️ Debes entregar el examen antes de volver al contenido.", "warning");
+        return;
+    }
+
     activeTab = tabName;
     const tabs = document.querySelectorAll(".lesson-menu-item");
     tabs.forEach(tab => {
@@ -810,6 +815,16 @@ function switchTab(tabName) {
     } else if (tabName === "exam") {
         renderStageExam();
     }
+}
+
+function enterExamMode() {
+    document.body.classList.add("exam-mode");
+    lessonContentCard.classList.add("exam-mode-content");
+}
+
+function exitExamMode() {
+    document.body.classList.remove("exam-mode");
+    lessonContentCard.classList.remove("exam-mode-content");
 }
 
 // --- SISTEMA DE EVENTOS ---
@@ -1429,6 +1444,8 @@ function renderStageExam() {
     const isAlreadyCompleted = userState.completedStages[userState.currentStageIndex];
     const currentGrade = userState.stageGrades[userState.currentStageIndex];
 
+    enterExamMode();
+
     // Opciones para Pregunta 1 de Parte 1
     let q1OptionsHtml = "";
     exam.part1.q1.options.forEach((opt, oIdx) => {
@@ -1725,6 +1742,8 @@ function renderStageExam() {
 
         const totalScore = earnedP1Q1 + earnedP1Q2 + earnedP2A + earnedP2B + earnedP2TrueFalse + earnedP3;
         const passed = totalScore >= 70;
+
+        exitExamMode();
 
         userState.stageAttempts[userState.currentStageIndex] += 1;
         userState.stageGrades[userState.currentStageIndex] = totalScore;
