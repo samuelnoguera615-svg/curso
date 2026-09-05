@@ -2134,19 +2134,235 @@ body {
 .stages-pagination-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1rem;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 0.5rem;
     border-top: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
-/* Content modifications */
+.stages-pagination-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.stages-pagination-container::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+}
+
+.stages-pagination-container .btn-page-nav {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+}
+
+/* Exam Worksheet / Hoja de Examen */
+.exam-sheet {
+    background: linear-gradient(180deg, rgba(17, 20, 32, 0.95) 0%, rgba(11, 13, 21, 0.98) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    padding: 2.25rem;
+    position: relative;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.exam-sheet-header {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.exam-sheet-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid var(--accent);
+    color: var(--accent-light);
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.exam-sheet-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.exam-sheet-meta-grid {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.exam-sheet-meta-item strong {
+    color: var(--text-primary);
+}
+
+.exam-section-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1.75rem;
+    transition: border-color var(--transition-fast);
+}
+
+.exam-section-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.exam-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.exam-section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--secondary-light);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.exam-section-weight {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-light);
+    background: rgba(139, 92, 246, 0.15);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+}
+
+.exam-prompt {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.exam-fill-input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-sm);
+    color: #38bdf8;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    padding: 0.55rem 0.85rem;
+    width: 100%;
+    max-width: 420px;
+    margin: 0.5rem 0 0.5rem 0;
+    transition: all var(--transition-fast);
+}
+
+.exam-fill-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.exam-code-snippet {
+    background: #090a10;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    margin: 0.75rem 0 1rem 0;
+    overflow-x: auto;
+}
+
+.exam-feedback-item {
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.exam-feedback-item.correct {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.exam-feedback-item.incorrect {
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: #f87171;
+}
+
+.exam-grade-stamp {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    transform: rotate(12deg);
+    border: 3px double #10b981;
+    color: #34d399;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    background: rgba(15, 23, 42, 0.85);
+    pointer-events: none;
+}
+
+.exam-grade-stamp.failed {
+    border-color: #ef4444;
+    color: #f87171;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.exam-summary-banner {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
 .quiz-container {
     padding: 0.5rem 0;
 }
 
-/* Mega Exam Styles */
 .mega-exam-card {
     text-align: center;
     max-width: 600px;

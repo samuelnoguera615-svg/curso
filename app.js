@@ -80,7 +80,7 @@ selector {
         `;
     } else {
         theory += `
-            <p>JavaScript dota de interactividad al navegador. Por otro lado, Java en el backend procesa peticiones mediante Servlets y inyecta datos dinámicos en páginas JSP, interactuando con bases de datos relacionales y conectándose con JS en el frontend.</p>
+            <p>JavaScript dota de interactividad al navegador. Por otro lado, Java en el backend procesa peticiones mediante Servlets e inyecta datos dinámicos en páginas JSP, interactuando con bases de datos relacionales y conectándose con JS en el frontend.</p>
         `;
     }
     
@@ -197,128 +197,285 @@ test();`;
         explanation: `¡Correcto! Entender '${concept}' desde el enfoque de '${depth}' permite estructurar programas de forma más robusta y adaptada a estándares.`
     };
     
-    // 4. Examen final de aprobación (alternamos quiz teórico y reto práctico)
-    let evaluation = null;
-    const isCodeChallenge = (category === "html" || category === "css" || category === "html_css_conjunto" || (category === "js_java_html" && index % 2 === 0));
+    // 4. Examen Oficial Completo con Variación de Contenido (Formato de Evaluación Académica)
+    const examCode = `EX-${stageNum.toString().padStart(4, '0')}-${category.toUpperCase().slice(0, 4)}`;
     
-    if (isCodeChallenge) {
-        let file = "index.html";
-        let lang = "html";
-        let initial = "";
-        let instructions = `<h3>Examen Práctico: Desafío de ${concept}</h3>
-                            <p>Resuelve el siguiente reto en el editor de la derecha para aprobar la etapa:</p>`;
-        
-        if (category === "html" || category === "html_css_conjunto") {
-            const tagKeyword = concept.toLowerCase().includes("encabezado") ? "h1" : 
-                               concept.toLowerCase().includes("párrafo") ? "p" :
-                               concept.toLowerCase().includes("lista desordenada") ? "ul" :
-                               concept.toLowerCase().includes("lista ordenada") ? "ol" : 
-                               concept.toLowerCase().includes("enlace") ? "a" :
-                               concept.toLowerCase().includes("imagen") ? "img" : "div";
-            
-            instructions += `<p>Escribe tu código de modo que contenga al menos una etiqueta HTML de tipo <code>&lt;${tagKeyword}&gt;</code>.</p>`;
-            initial = `<!-- Escribe tu código HTML aquí -->\n`;
-            if (tagKeyword === "img") {
-                initial += `<img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=100" alt="Imagen de muestra">\n`;
-            } else if (tagKeyword === "a") {
-                initial += `<a href="#">Enlace de prueba</a>\n`;
-            } else {
-                initial += `<${tagKeyword}>Texto de prueba sobre ${concept}</${tagKeyword}>\n`;
-            }
-            
-            evaluation = {
-                type: "code_challenge",
-                title: `Examen Etapa ${stageNum}: ${concept}`,
-                instructions: instructions,
-                initialCode: initial,
-                filename: file,
-                language: lang,
-                validate: function(code) {
-                    const doc = new DOMParser().parseFromString(code, 'text/html');
-                    const hasTag = doc.querySelector(tagKeyword) !== null;
-                    if (!hasTag) {
-                        return { success: false, msg: `El código debe contener al menos un elemento <${tagKeyword}>.` };
-                    }
-                    return { success: true, msg: `¡Perfecto! Hemos detectado la etiqueta <${tagKeyword}> correspondiente a ${concept}.` };
-                }
-            };
-        } else if (category === "css") {
-            file = "styles.html";
-            lang = "html";
-            initial = `<div class="mi-caja">Aplica estilo aquí</div>\n\n<style>\n.mi-caja {\n    /* Agrega color de fondo 'blue' (azul) */\n    \n}\n</style>`;
-            instructions += `<p>Modifica los estilos CSS de modo que la clase <code>.mi-caja</code> tenga declarada la propiedad <code>background-color: blue;</code> (azul).</p>`;
-            
-            evaluation = {
-                type: "code_challenge",
-                title: `Examen Etapa ${stageNum}: ${concept}`,
-                instructions: instructions,
-                initialCode: initial,
-                filename: file,
-                language: lang,
-                validate: function(code) {
-                    try {
-                        const doc = new DOMParser().parseFromString(code, 'text/html');
-                        const styleTag = doc.querySelector('style');
-                        if (!styleTag) return { success: false, msg: "No se encontró una etiqueta <style>." };
-                        const styleContent = styleTag.innerHTML.toLowerCase().replace(/\s+/g, '');
-                        const hasBgBlue = /\.mi-caja\{([^}]*background-color:blue|[^}]*background:blue|[^}]*background-color:#0000ff|[^}]*background:#0000ff)/i.test(styleContent);
-                        if (!hasBgBlue) {
-                            return { success: false, msg: "La clase '.mi-caja' debe tener la propiedad 'background-color' establecida en 'blue'." };
-                        }
-                    } catch(e) {
-                        return { success: false, msg: "Error de lectura CSS: " + e.message };
-                    }
-                    return { success: true, msg: "¡Estilo CSS validado correctamente!" };
-                }
-            };
-        } else {
-            // JS challenge
-            file = "script.js";
-            lang = "javascript";
-            initial = `function evaluar(x) {\n    // Retorna el doble de x (x * 2)\n    \n}`;
-            instructions += `<p>Completa la función <code>evaluar</code> para que retorne el doble del parámetro recibido (<code>x * 2</code>).</p>`;
-            
-            evaluation = {
-                type: "code_challenge",
-                title: `Examen Etapa ${stageNum}: ${concept}`,
-                instructions: instructions,
-                initialCode: initial,
-                filename: file,
-                language: lang,
-                validate: function(code) {
-                    try {
-                        const runner = new Function(code + "\nreturn evaluar;");
-                        const userFunc = runner();
-                        if (typeof userFunc !== 'function') return { success: false, msg: "La función 'evaluar' no está definida." };
-                        if (userFunc(10) !== 20) return { success: false, msg: "evaluar(10) debería retornar 20." };
-                        if (userFunc(-3) !== -6) return { success: false, msg: "evaluar(-3) debería retornar -6." };
-                    } catch(e) {
-                        return { success: false, msg: "Error sintáctico en JS: " + e.message };
-                    }
-                    return { success: true, msg: "¡Tests unitarios de la función JS aprobados!" };
-                }
-            };
-        }
+    // Determinación de keywords y elementos según categoría y concepto
+    let targetTag = "div";
+    if (category === "html" || category === "html_css_conjunto") {
+        const lower = concept.toLowerCase();
+        if (lower.includes("encabezado")) targetTag = "h1";
+        else if (lower.includes("párrafo") || lower.includes("parrafo")) targetTag = "p";
+        else if (lower.includes("desordenada")) targetTag = "ul";
+        else if (lower.includes("ordenada")) targetTag = "ol";
+        else if (lower.includes("enlace") || lower.includes("hipervínculo") || lower.includes("ancla")) targetTag = "a";
+        else if (lower.includes("imagen")) targetTag = "img";
+        else if (lower.includes("tabla")) targetTag = "table";
+        else if (lower.includes("formulario")) targetTag = "form";
+        else if (lower.includes("textarea")) targetTag = "textarea";
+        else if (lower.includes("select") || lower.includes("desplegable")) targetTag = "select";
+        else if (lower.includes("audio")) targetTag = "audio";
+        else if (lower.includes("video")) targetTag = "video";
+        else if (lower.includes("nav")) targetTag = "nav";
+        else if (lower.includes("section")) targetTag = "section";
+        else if (lower.includes("article")) targetTag = "article";
+        else if (lower.includes("footer")) targetTag = "footer";
+        else targetTag = "div";
+    }
+
+    // Parte I: 2 Preguntas de Selección y Análisis (15 pts c/u = 30 pts)
+    let p1Q1 = "";
+    let p1Q1Options = [];
+    let p1Q1Correct = 0;
+    let p1Q1Explanation = "";
+
+    let p1Q2 = "";
+    let p1Q2Options = [];
+    let p1Q2Correct = 0;
+    let p1Q2Explanation = "";
+
+    if (category === "logica") {
+        p1Q1 = `¿Cuál es el rol principal de '${concept}' al estructurar un algoritmo bajo el enfoque de '${depth}'?`;
+        p1Q1Options = [
+            `Garantizar un flujo secuencial, lógico y predecible en el procesamiento de datos.`,
+            `Ejecutar instrucciones de forma aleatoria sin control del programador.`,
+            `Borrar la memoria RAM automáticamente en cada instrucción.`,
+            `Omitir la necesidad de comparar variables o condiciones.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `En programación, ${concept} asegura que el algoritmo tome caminos lógicos consistentes.`;
+
+        p1Q2 = `Si evaluamos una condición con '${concept}', ¿qué resultado o buena práctica es indispensable?`;
+        p1Q2Options = [
+            `Usar comparaciones estrictas (como ===) para verificar tanto valor como tipo de dato.`,
+            `Modificar los tipos de datos de forma impredecible en tiempo de ejecución.`,
+            `Evitar colocar condiciones booleanas en bucles o condicionales.`,
+            `Usar variables globales no inicializadas en todas las expresiones.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `La comparación estricta y el manejo de tipos previenen fallos lógicos sutiles.`;
+    } else if (category === "html") {
+        p1Q1 = `En HTML5, ¿qué estándar semántico se debe respetar al implementar '${concept}' (${depth})?`;
+        p1Q1Options = [
+            `Usar etiquetas estructurales semánticas (como <${targetTag}>) con su correspondiente cierre o atributos válidos.`,
+            `Escribir todo el documento dentro de una sola etiqueta <script>.`,
+            `Reemplazar el texto legible con imágenes estáticas para evitar el parseo del DOM.`,
+            `Eliminar el <!DOCTYPE html> y omitir la jerarquía del body.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `HTML5 exige semántica clara para accesibilidad y correcto renderizado del DOM.`;
+
+        p1Q2 = `¿Qué atributo o consideración técnica es clave al manipular '${concept}' en el navegador?`;
+        p1Q2Options = [
+            `Incluir identificadores o clases descriptivas para accesibilidad (ARIA) y vinculación con estilos/scripts.`,
+            `Nunca utilizar atributos en las etiquetas HTML.`,
+            `Escribir los nombres de las etiquetas en mayúsculas arbitrarias sin respetar el estándar.`,
+            `Anidar etiquetas sin cerrarlas adecuadamente.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `Los atributos bien estructurados permiten enlazar estilos, interactividad y soporte de accesibilidad.`;
+    } else if (category === "css") {
+        p1Q1 = `Al diseñar reglas de estilo para '${concept}' (${depth}), ¿qué principio de especificidad es correcto?`;
+        p1Q1Options = [
+            `Definir selectores claros mediante clases en lugar de abusar de la regla !important.`,
+            `Colocar !important en absolutamente todas las propiedades CSS.`,
+            `Evitar el uso de hojas de estilo externas y poner todo en atributos inline.`,
+            `Ocultar todos los contenedores con visibility: hidden por defecto.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `Una arquitectura CSS mantenible utiliza selectores de clase con especificidad balanceada.`;
+
+        p1Q2 = `Respecto al modelo de caja y disposición visual en '${concept}', ¿cuál es la mejor práctica?`;
+        p1Q2Options = [
+            `Configurar márgenes, paddings y tipos de display (flex/grid/block) de forma coherente y responsiva.`,
+            `Fijar dimensiones en píxeles fijos que desborden cualquier pantalla móvil.`,
+            `No declarar colores ni tipografías en el archivo CSS.`,
+            `Asignar z-index: 999999 a todos los elementos de la interfaz.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `El control del modelo de caja y propiedades de flujo garantiza un diseño adaptable.`;
+    } else if (category === "html_css_conjunto") {
+        p1Q1 = `Al integrar HTML y CSS para '${concept}' en su fase '${depth}', ¿cuál es la regla de arquitectura base?`;
+        p1Q1Options = [
+            `Separar la estructura semántica en el HTML y la presentación visual en el archivo CSS.`,
+            `Colocar los estilos visuales directamente en el texto del documento sin etiquetas.`,
+            `No usar clases ni identificadores para conectar HTML con CSS.`,
+            `Renderizar toda la interfaz con un archivo de audio.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `La separación de responsabilidades entre contenido (HTML) y diseño (CSS) es la base del desarrollo web.`;
+
+        p1Q2 = `¿Cómo se asegura que el componente '${concept}' se adapte a distintas resoluciones?`;
+        p1Q2Options = [
+            `Mediante media queries (@media) y unidades flexibles como %, rem o fr.`,
+            `Obligando al usuario a no redimensionar la ventana de su navegador.`,
+            `Duplicando el código HTML 10 veces para cada pantalla.`,
+            `Desactivando el soporte para hojas de estilo en dispositivos móviles.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `El responsive design se logra con media queries y unidades relativas.`;
     } else {
-        // Examen de opción múltiple
-        evaluation = {
-            type: "quiz",
-            title: `Examen Teórico Etapa ${stageNum}: ${concept}`,
-            questions: [
-                {
-                    q: `¿Cuál de las siguientes afirmaciones es correcta sobre la optimización de '${concept}' en el nivel '${depth}'?`,
-                    options: [
-                        "Optimizarlo permite mejorar el rendimiento y la mantenibilidad del código.",
-                        "Solo sirve para cambiar colores de fondo.",
-                        "Es inútil ya que el navegador maneja todo automáticamente.",
-                        "Detiene el funcionamiento de la base de datos."
-                    ],
-                    correct: 0,
-                    explanation: "¡Correcto! Seguir buenas prácticas y optimizar los recursos agiliza el tiempo de carga de las páginas web y facilita la lectura del código."
+        p1Q1 = `En el flujo interactivo de '${concept}' (${depth}), ¿cómo interactúa JavaScript con el DOM o el backend?`;
+        p1Q1Options = [
+            `Captura eventos del usuario (click, input, submit) y manipula el DOM o realiza peticiones asíncronas.`,
+            `El navegador bloquea cualquier intento de manipular la interfaz con código.`,
+            `Las funciones de JavaScript no pueden leer valores de elementos HTML.`,
+            `El servidor web procesa la interfaz gráfica sin enviar código al cliente.`
+        ];
+        p1Q1Correct = 0;
+        p1Q1Explanation = `JavaScript permite dinamismo mediante la escucha de eventos y actualización del árbol DOM.`;
+
+        p1Q2 = `Al manejar datos o lógica en '${concept}', ¿qué principio garantiza estabilidad?`;
+        p1Q2Options = [
+            `Validar los datos de entrada antes de procesarlos y manejar posibles excepciones o errores.`,
+            `Confiar en que cualquier entrada del usuario siempre vendrá en el formato correcto sin verificar.`,
+            `Utilizar bucles infinitos no controlados para pausar la ejecución del navegador.`,
+            `Eliminar las funciones y escribir todo el código en una sola línea no formateada.`
+        ];
+        p1Q2Correct = 0;
+        p1Q2Explanation = `La validación de datos y el manejo de excepciones evitan caídas en la aplicación.`;
+    }
+
+    let p2ItemA_Prompt = "";
+    let p2ItemA_Expected = [];
+    let p2ItemA_Placeholder = "";
+    let p2ItemA_Explanation = "";
+
+    let p2ItemB_Prompt = "";
+    let p2ItemB_Expected = [];
+    let p2ItemB_Placeholder = "";
+    let p2ItemB_Explanation = "";
+    const p2TrueFalse = `Verdadero o falso: aplicar '${concept}' desde el enfoque '${depth}' ayuda a construir soluciones más claras y mantenibles.`;
+    const p2TrueFalseCorrect = true;
+    const p2TrueFalseExplanation = "La afirmación es verdadera: comprender el concepto y aplicarlo con un enfoque definido mejora la calidad de la solución.";
+
+    if (category === "logica") {
+        p2ItemA_Prompt = `Pregunta A: Escribe la palabra clave de JavaScript para declarar una variable de ámbito de bloque reasignable (ej: <code>let</code>):`;
+        p2ItemA_Expected = ["let", "const", "var"];
+        p2ItemA_Placeholder = "Ej: let";
+        p2ItemA_Explanation = "La palabra clave 'let' permite declarar variables de ámbito local/bloque reasignables.";
+
+        p2ItemB_Prompt = `Pregunta B: Escribe el operador de comparación estricta de igualdad en JavaScript:`;
+        p2ItemB_Expected = ["===", "==", "!=="];
+        p2ItemB_Placeholder = "Ej: ===";
+        p2ItemB_Explanation = "El operador '===' comprueba tanto la igualdad de valor como la concordancia de tipo de dato.";
+    } else if (category === "html" || category === "html_css_conjunto") {
+        p2ItemA_Prompt = `Pregunta A: Escribe el nombre de la etiqueta HTML semántica para <strong>${concept}</strong> (sin signos &lt;&gt;):`;
+        p2ItemA_Expected = [targetTag, `<${targetTag}>`, `${targetTag}>`, `<${targetTag}`];
+        p2ItemA_Placeholder = `Ej: ${targetTag}`;
+        p2ItemA_Explanation = `La etiqueta estándar correspondiente es <${targetTag}>.`;
+
+        p2ItemB_Prompt = `Pregunta B: Escribe el nombre de la etiqueta raíz que envuelve el contenido visible de una página web (sin signos):`;
+        p2ItemB_Expected = ["body", "<body>", "html", "<html>", "main", "<main>"];
+        p2ItemB_Placeholder = "Ej: body";
+        p2ItemB_Explanation = "La etiqueta <body> delimita el cuerpo de contenido visible en el navegador.";
+    } else if (category === "css") {
+        let cssProp = concept.toLowerCase().includes("color") ? "color" :
+                      concept.toLowerCase().includes("fondo") || concept.toLowerCase().includes("background") ? "background-color" :
+                      concept.toLowerCase().includes("flex") ? "display" :
+                      concept.toLowerCase().includes("grid") ? "display" :
+                      concept.toLowerCase().includes("margin") || concept.toLowerCase().includes("márgen") ? "margin" :
+                      concept.toLowerCase().includes("padding") ? "padding" :
+                      concept.toLowerCase().includes("border") || concept.toLowerCase().includes("borde") ? "border" : "color";
+        p2ItemA_Prompt = `Pregunta A: Escribe la propiedad CSS utilizada para definir el aspecto o disposición de <strong>${concept}</strong>:`;
+        p2ItemA_Expected = [cssProp, "color", "background", "background-color", "display", "margin", "padding", "border", "font-size", "width", "height", "border-radius", "overflow"];
+        p2ItemA_Placeholder = `Ej: ${cssProp}`;
+        p2ItemA_Explanation = `La propiedad clave es '${cssProp}'.`;
+
+        p2ItemB_Prompt = `Pregunta B: Escribe el valor CSS que activa el modelo de caja flexible moderno en la propiedad <code>display</code>:`;
+        p2ItemB_Expected = ["flex", "inline-flex", "grid", "block"];
+        p2ItemB_Placeholder = "Ej: flex";
+        p2ItemB_Explanation = "El valor 'flex' activa el contenedor flexible Flexbox.";
+    } else {
+        p2ItemA_Prompt = `Pregunta A: Escribe el método de <code>document</code> para seleccionar un elemento por su selector CSS:`;
+        p2ItemA_Expected = ["queryselector", "document.queryselector", "getelementbyid", "queryselectorall"];
+        p2ItemA_Placeholder = "Ej: querySelector";
+        p2ItemA_Explanation = "El método 'querySelector' busca el primer elemento coincidente en el DOM.";
+
+        p2ItemB_Prompt = `Pregunta B: Escribe la instrucción de JavaScript para enviar un valor de salida desde una función:`;
+        p2ItemB_Expected = ["return", "console.log", "yield"];
+        p2ItemB_Placeholder = "Ej: return";
+        p2ItemB_Explanation = "La sentencia 'return' finaliza la ejecución de una función y especifica el valor devuelto.";
+    }
+
+    // Parte III: Reto Práctico de Desarrollo de Código (40 pts)
+    let p3Title = `Desafío Práctico: ${concept}`;
+    let p3Lang = (category === "html" || category === "html_css_conjunto") ? "html" :
+                 (category === "css") ? "css" : "javascript";
+    let p3Filename = (p3Lang === "html") ? "index.html" : (p3Lang === "css") ? "styles.html" : "main.js";
+    let p3Initial = "";
+    let p3Instructions = "";
+    let p3Validate = null;
+
+    if (category === "html" || category === "html_css_conjunto") {
+        p3Instructions = `<p>Desarrolla o completa la estructura HTML para que contenga correctamente al menos una etiqueta <code>&lt;${targetTag}&gt;</code> con texto descriptivo.</p>`;
+        p3Initial = `<!-- Examen Práctico: Escribe tu código HTML -->\n<${targetTag}>Evaluación de ${concept}</${targetTag}>\n`;
+        p3Validate = function(code) {
+            const doc = new DOMParser().parseFromString(code, 'text/html');
+            const el = doc.querySelector(targetTag);
+            if (!el) return { success: false, msg: `Falta incluir el elemento <${targetTag}> en el código.` };
+            return { success: true, msg: `Elemento <${targetTag}> detectado y validado en el DOM.` };
+        };
+    } else if (category === "css") {
+        p3Instructions = `<p>En el bloque <code>&lt;style&gt;</code>, asigna estilos válidos a la clase <code>.caja-examen</code> (por ejemplo <code>color: white;</code> y un color de fondo).</p>`;
+        p3Initial = `<div class="caja-examen">Evaluación CSS: ${concept}</div>\n\n<style>\n.caja-examen {\n    /* Escribe aquí tus propiedades CSS */\n    color: white;\n    background-color: #8b5cf6;\n    padding: 16px;\n    border-radius: 8px;\n}\n</style>`;
+        p3Validate = function(code) {
+            try {
+                const doc = new DOMParser().parseFromString(code, 'text/html');
+                const style = doc.querySelector('style');
+                if (!style) return { success: false, msg: "Falta la etiqueta <style> con las reglas CSS." };
+                const text = style.innerHTML.toLowerCase();
+                if (!text.includes(".caja-examen") || text.indexOf('{') === -1) {
+                    return { success: false, msg: "La clase '.caja-examen' debe tener reglas CSS definidas." };
                 }
-            ]
+                return { success: true, msg: "Reglas CSS para '.caja-examen' validadas correctamente." };
+            } catch(e) {
+                return { success: false, msg: e.message };
+            }
+        };
+    } else {
+        p3Instructions = `<p>Crea o completa la función <code>solucionExamen(x)</code> que reciba un número y devuelva su doble (<code>x * 2</code>).</p>`;
+        p3Initial = `function solucionExamen(x) {\n    // Retorna el doble del parámetro recibido\n    return x * 2;\n}`;
+        p3Validate = function(code) {
+            try {
+                const runner = new Function(code + "\nreturn solucionExamen;");
+                const fn = runner();
+                if (typeof fn !== 'function') return { success: false, msg: "La función 'solucionExamen' no está declarada." };
+                if (fn(5) !== 10) return { success: false, msg: "solucionExamen(5) debería retornar 10." };
+                if (fn(-2) !== -4) return { success: false, msg: "solucionExamen(-2) debería retornar -4." };
+                return { success: true, msg: "Función JavaScript validada con batería de tests automáticos." };
+            } catch(e) {
+                return { success: false, msg: "Error de ejecución en JS: " + e.message };
+            }
         };
     }
+
+    const evaluation = {
+        examCode: examCode,
+        title: `Examen Oficial: ${concept}`,
+        category: category,
+        depth: depth,
+        part1: {
+            title: "Parte I: Análisis Teórico y Detección de Errores (30 Puntos)",
+            q1: { question: p1Q1, options: p1Q1Options, correct: p1Q1Correct, explanation: p1Q1Explanation, weight: 15 },
+            q2: { question: p1Q2, options: p1Q2Options, correct: p1Q2Correct, explanation: p1Q2Explanation, weight: 15 }
+        },
+        part2: {
+            title: "Parte II: Respuesta Escrita y Verdadero o Falso (30 Puntos)",
+            itemA: { prompt: p2ItemA_Prompt, expected: p2ItemA_Expected, placeholder: p2ItemA_Placeholder, explanation: p2ItemA_Explanation, weight: 10 },
+            itemB: { prompt: p2ItemB_Prompt, expected: p2ItemB_Expected, placeholder: p2ItemB_Placeholder, explanation: p2ItemB_Explanation, weight: 10 },
+            trueFalse: { prompt: p2TrueFalse, correct: p2TrueFalseCorrect, explanation: p2TrueFalseExplanation, weight: 10 }
+        },
+        part3: {
+            title: "Parte III: Ejercicio Práctico de Desarrollo y Reto de Código (40 Puntos)",
+            weight: 40,
+            instructions: p3Instructions,
+            filename: p3Filename,
+            language: p3Lang,
+            initialCode: p3Initial,
+            validate: p3Validate
+        }
+    };
     
     return {
         id: `stage-${stageNum}`,
@@ -547,8 +704,9 @@ const btnPrintCert = document.getElementById("btn-print-cert");
 // Confetti Overlay
 const confettiOverlay = document.getElementById("confetti-overlay");
 
-// Variables globales de Pestañas y Paginación
+// Variables globales de Pestañas, Categorías y Paginación
 let activeTab = "theory";
+let openCategories = new Set();
 let categoryPages = {
     "cat-logic": 0,
     "cat-html": 0,
@@ -715,6 +873,7 @@ function setupEventListeners() {
             };
             userState.unlockedStages[0] = true;
             isShowingMegaExam = false;
+            openCategories.clear();
             showToast("Datos borrados. Iniciando de nuevo.", "info");
             applyState();
         }
@@ -727,7 +886,7 @@ function setupEventListeners() {
             userState.currentStageIndex -= 1;
             isShowingMegaExam = false;
             saveProgress();
-            switchView("lessons-view");
+            loadStageContent();
         } else {
             switchView("dashboard");
         }
@@ -740,8 +899,6 @@ function setupEventListeners() {
             return;
         }
 
-        // Si la etapa que se acaba de completar es un checkpoint (cada 100 etapas), activamos el examen total
-        const nextStageNum = userState.currentStageIndex + 2; // stage index + 1 (current stage) + 1 (next stage)
         const isCheckpoint = (userState.currentStageIndex + 1) % 100 === 0 && !userState.unlockedStages[userState.currentStageIndex + 1];
         
         if (isCheckpoint && !isShowingMegaExam) {
@@ -927,7 +1084,7 @@ function triggerLevelUpEffects() {
     triggerConfetti();
 }
 
-// --- RENDERIZAR DASHBOARD CON PAGINACIÓN DE 20 ETAPAS ---
+// --- RENDERIZAR DASHBOARD CON CONTROL DE ACORDEÓN Y PAGINACIÓN ---
 function renderDashboard() {
     const completedCount = userState.completedStages.filter(Boolean).length;
     statCompletedStages.textContent = `${completedCount}/1000`;
@@ -944,11 +1101,17 @@ function renderDashboard() {
         statAvgGrade.textContent = "-";
     }
 
+    // Inicializar categoría abierta si el conjunto está vacío
+    if (openCategories.size === 0) {
+        const defaultCat = CATEGORIES.find(cat => userState.currentStageIndex >= cat.range[0] && userState.currentStageIndex <= cat.range[1]);
+        if (defaultCat) openCategories.add(defaultCat.id);
+    }
+
     categoriesContainer.innerHTML = "";
     CATEGORIES.forEach(cat => {
         const group = document.createElement("div");
-        const isActiveCategory = userState.currentStageIndex >= cat.range[0] && userState.currentStageIndex <= cat.range[1];
-        group.className = `category-group ${isActiveCategory ? 'active' : ''}`;
+        const isOpen = openCategories.has(cat.id);
+        group.className = `category-group ${isOpen ? 'active' : ''}`;
         group.id = cat.id;
 
         let completedInCat = 0;
@@ -1039,16 +1202,23 @@ function renderDashboard() {
         // Colapsar/Expandir Categoría
         const header = group.querySelector(".category-header");
         header.addEventListener("click", () => {
-            group.classList.toggle("active");
+            if (openCategories.has(cat.id)) {
+                openCategories.delete(cat.id);
+                group.classList.remove("active");
+            } else {
+                openCategories.add(cat.id);
+                group.classList.add("active");
+            }
         });
     });
 
-    // Manejar clics de paginación
+    // Manejar clics de paginación (Mantiene la categoría abierta sin cerrarla)
     document.querySelectorAll(".btn-page-nav").forEach(btn => {
         btn.addEventListener("click", (e) => {
             e.stopPropagation();
             const catId = btn.getAttribute("data-cat");
             const page = parseInt(btn.getAttribute("data-page"));
+            openCategories.add(catId);
             categoryPages[catId] = page;
             renderDashboard();
         });
@@ -1078,7 +1248,7 @@ async function loadStageContent() {
         return;
     }
 
-    // Restablecer el menú de pestañas si venía de un Examen Total
+    // Menú de pestañas
     lessonsMenu.innerHTML = `
         <a href="#" class="lesson-menu-item active" data-tab="theory">
             <span>📚 1. Teoría</span>
@@ -1101,10 +1271,8 @@ async function loadStageContent() {
     const stage = COURSE_DATA[userState.currentStageIndex];
     lessonStageTitle.textContent = `Etapa ${userState.currentStageIndex + 1}: ${stage.title}`;
     
-    // Ocultar modal deslizante anterior si estuviera abierto
     document.getElementById("ai-tutor-panel").classList.add("hidden");
 
-    // Limpiar vistas de las pestañas
     tabContentTheory.innerHTML = stage.theory;
     tabContentExamples.innerHTML = stage.examples;
     
@@ -1113,7 +1281,6 @@ async function loadStageContent() {
     const useAiContent = toggleAiContent ? toggleAiContent.checked : false;
 
     if (useAiContent && apiKey) {
-        // Mostrar cargando en la teoría
         tabContentTheory.innerHTML = `
             ${stage.theory}
             <div class="ai-loading-spinner">
@@ -1155,24 +1322,15 @@ async function loadStageContent() {
         }
     }
 
-    // Configurar botones de pie
     if (userState.currentStageIndex === 0) {
         btnPrevLesson.disabled = true;
         btnPrevLesson.textContent = "Volver al Panel";
-        btnPrevLesson.onclick = () => switchView("dashboard");
     } else {
         btnPrevLesson.disabled = false;
         btnPrevLesson.textContent = "Anterior Etapa";
-        btnPrevLesson.onclick = () => {
-            userState.currentStageIndex -= 1;
-            isShowingMegaExam = false;
-            loadStageContent();
-        };
     }
 
     btnNextLesson.textContent = "Siguiente Etapa";
-    
-    // Reiniciar a la pestaña de Teoría
     switchTab("theory");
 }
 
@@ -1207,497 +1365,673 @@ function renderStageQuiz() {
         </div>
     `;
 
-    // Manejar selección visual
     const options = tabContentQuiz.querySelectorAll(".quiz-option");
     options.forEach(opt => {
         opt.addEventListener("click", () => {
             options.forEach(o => o.classList.remove("selected"));
             opt.classList.add("selected");
-            const radio = opt.querySelector("input");
-            radio.checked = true;
-            currentQuizSelectedAnswer = parseInt(radio.value);
+            currentQuizSelectedAnswer = parseInt(opt.querySelector("input").value);
         });
     });
 
-    const btnCheck = document.getElementById("btn-quiz-check");
-    btnCheck.addEventListener("click", () => {
+    document.getElementById("btn-quiz-check").addEventListener("click", () => {
+        const feedback = document.getElementById("quiz-feedback-box");
         if (currentQuizSelectedAnswer === null) {
-            showToast("⚠️ Selecciona una opción antes de comprobar.", "warning");
+            showToast("⚠️ Selecciona una respuesta primero.", "warning");
             return;
         }
 
-        const isCorrect = currentQuizSelectedAnswer === quiz.correct;
-        const feedbackBox = document.getElementById("quiz-feedback-box");
-        
-        if (isCorrect) {
-            feedbackBox.innerHTML = `
-                <div class="card" style="border-left: 4px solid var(--success); background: var(--success-glow); padding: 1.25rem;">
-                    <strong style="color:#34d399">✓ ¡Respuesta Correcta!</strong>
-                    <p style="margin-top:0.5rem; font-size:0.85rem;">${quiz.explanation}</p>
+        if (currentQuizSelectedAnswer === quiz.correct) {
+            feedback.innerHTML = `
+                <div class="card" style="border: 1px solid var(--success); background: rgba(16, 185, 129, 0.05); padding: 1rem;">
+                    <strong style="color: var(--success);">✓ ¡Correcto!</strong>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">${quiz.explanation}</p>
                 </div>
             `;
-            addXp(10); // premio de quiz
+            showToast("✓ Respuesta correcta.", "success");
         } else {
-            feedbackBox.innerHTML = `
-                <div class="card" style="border-left: 4px solid var(--danger); background: var(--danger-glow); padding: 1.25rem;">
-                    <strong style="color:#f87171">✗ Respuesta Incorrecta</strong>
-                    <p style="margin-top:0.5rem; font-size:0.85rem;">Inténtalo de nuevo. Analiza el contenido de la pestaña de Teoría.</p>
+            feedback.innerHTML = `
+                <div class="card" style="border: 1px solid var(--danger); background: rgba(244, 63, 94, 0.05); padding: 1rem;">
+                    <strong style="color: var(--danger);">✗ Respuesta Incorrecta</strong>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Revisa la teoría del módulo y vuelve a intentarlo.</p>
                 </div>
             `;
+            showToast("✗ Inténtalo de nuevo.", "danger");
         }
     });
 }
 
-// Pestaña 5: Examen
+// Pestaña 5: Hoja Oficial de Examen Completo con Variación de Contenido
 function renderStageExam() {
     const stage = COURSE_DATA[userState.currentStageIndex];
-    const evalData = stage.evaluation;
-    
-    // Si la etapa ya está aprobada, mostrar éxito
-    if (userState.completedStages[userState.currentStageIndex]) {
-        tabContentExam.innerHTML = `
-            <div class="result-card card" style="max-width:600px; margin: 2rem auto; text-align:center;">
-                <div class="result-icon">🎉</div>
-                <h2>Examen Aprobado</h2>
-                <p>Ya has aprobado la evaluación correspondiente a esta etapa con calificación de 100%.</p>
-                <div class="result-grade approved">100%</div>
-            </div>
+    const exam = stage.evaluation;
+    const isAlreadyCompleted = userState.completedStages[userState.currentStageIndex];
+    const currentGrade = userState.stageGrades[userState.currentStageIndex];
+
+    // Opciones para Pregunta 1 de Parte 1
+    let q1OptionsHtml = "";
+    exam.part1.q1.options.forEach((opt, oIdx) => {
+        q1OptionsHtml += `
+            <label class="quiz-option" data-p1-q1="${oIdx}">
+                <input type="radio" name="sheet-p1-q1" value="${oIdx}">
+                <span>${opt}</span>
+            </label>
         `;
-        return;
-    }
+    });
 
-    if (evalData.type === "quiz") {
-        let optionsHtml = "";
-        evalData.questions[0].options.forEach((opt, oIdx) => {
-            optionsHtml += `
-                <label class="quiz-option">
-                    <input type="radio" name="stage-exam-quiz" value="${oIdx}">
-                    <span>${opt}</span>
-                </label>
-            `;
-        });
-
-        tabContentExam.innerHTML = `
-            <div class="quiz-container" style="max-width: 650px; margin: 0 auto;">
-                <h2>Examen Conceptual de la Etapa</h2>
-                <p style="font-size:1.05rem; font-weight:500; margin-bottom: 1.5rem;">${evalData.questions[0].q}</p>
-                <div class="quiz-options-container">
-                    ${optionsHtml}
-                </div>
-                <div class="quiz-actions" style="margin-top:1.5rem;">
-                    <button id="btn-submit-exam-quiz" class="btn btn-primary">Enviar Examen</button>
-                </div>
-            </div>
+    // Opciones para Pregunta 2 de Parte 1
+    let q2OptionsHtml = "";
+    exam.part1.q2.options.forEach((opt, oIdx) => {
+        q2OptionsHtml += `
+            <label class="quiz-option" data-p1-q2="${oIdx}">
+                <input type="radio" name="sheet-p1-q2" value="${oIdx}">
+                <span>${opt}</span>
+            </label>
         `;
+    });
 
-        const options = tabContentExam.querySelectorAll(".quiz-option");
-        let selectedAns = null;
-        options.forEach(opt => {
-            opt.addEventListener("click", () => {
-                options.forEach(o => o.classList.remove("selected"));
-                opt.classList.add("selected");
-                selectedAns = parseInt(opt.querySelector("input").value);
-            });
-        });
+    const isHtmlOrCss = (exam.part3.language === 'html' || exam.part3.language === 'css');
 
-        document.getElementById("btn-submit-exam-quiz").addEventListener("click", () => {
-            if (selectedAns === null) {
-                showToast("⚠️ Debes seleccionar una respuesta.", "warning");
-                return;
-            }
-
-            const isCorrect = selectedAns === evalData.questions[0].correct;
+    tabContentExam.innerHTML = `
+        <div class="exam-sheet">
+            ${isAlreadyCompleted ? `<div class="exam-grade-stamp">APROBADO<br><span style="font-size:0.9rem;">${currentGrade !== null ? currentGrade : 100}%</span></div>` : ''}
             
-            userState.stageAttempts[userState.currentStageIndex] += 1;
-            if (isCorrect) {
-                userState.completedStages[userState.currentStageIndex] = true;
-                userState.stageGrades[userState.currentStageIndex] = 100;
-                if (userState.currentStageIndex < 999) {
-                    const isNextCheckpoint = (userState.currentStageIndex + 1) % 100 === 0;
-                    if (!isNextCheckpoint) {
-                        userState.unlockedStages[userState.currentStageIndex + 1] = true;
-                    }
-                }
-                addXp(stage.xpAward);
-                saveProgress();
-                applyState();
-                showToast("🎉 ¡Felicidades! Examen de etapa aprobado.", "success");
-                renderStageExam(); // recargar vista de aprobado
-            } else {
-                userState.stageGrades[userState.currentStageIndex] = 0;
-                saveProgress();
-                applyState();
-                showToast("❌ Respuesta incorrecta. Revisa la teoría e inténtalo de nuevo.", "danger");
-            }
-        });
+            <div class="exam-sheet-header">
+                <div>
+                    <span class="exam-sheet-badge">📋 Hoja Oficial de Evaluación</span>
+                    <h2 class="exam-sheet-title">${exam.title}</h2>
+                    <div class="exam-sheet-meta-grid">
+                        <span class="exam-sheet-meta-item">Código: <strong>${exam.examCode}</strong></span>
+                        <span class="exam-sheet-meta-item">Estudiante: <strong>${userState.name || 'Cadete'}</strong></span>
+                        <span class="exam-sheet-meta-item">Ponderación Total: <strong>100 Puntos</strong></span>
+                        <span class="exam-sheet-meta-item">Mínimo Aprobatorio: <strong>70%</strong></span>
+                    </div>
+                </div>
+            </div>
 
-    } else if (evalData.type === "code_challenge") {
-        tabContentExam.innerHTML = `
-            <div class="challenge-grid">
-                <div class="challenge-instructions">
-                    ${evalData.instructions}
+            <!-- PARTE I: ANÁLISIS TEÓRICO Y DETECCIÓN -->
+            <div class="exam-section-card" id="exam-card-part1">
+                <div class="exam-section-header">
+                    <span class="exam-section-title">🔍 ${exam.part1.title}</span>
+                    <span class="exam-section-weight">30 Pts</span>
                 </div>
                 
-                <div class="challenge-editor-panel">
+                <div style="margin-bottom: 1.5rem;">
+                    <p class="exam-prompt"><strong>1.1.</strong> ${exam.part1.q1.question}</p>
+                    <div class="quiz-options-container" id="p1-q1-options">
+                        ${q1OptionsHtml}
+                    </div>
+                    <div id="p1-q1-feedback" style="margin-top: 0.5rem;"></div>
+                </div>
+
+                <div>
+                    <p class="exam-prompt"><strong>1.2.</strong> ${exam.part1.q2.question}</p>
+                    <div class="quiz-options-container" id="p1-q2-options">
+                        ${q2OptionsHtml}
+                    </div>
+                    <div id="p1-q2-feedback" style="margin-top: 0.5rem;"></div>
+                </div>
+            </div>
+
+            <!-- PARTE II: COMPLETACIÓN TÉCNICA Y SINTAXIS -->
+            <div class="exam-section-card" id="exam-card-part2">
+                <div class="exam-section-header">
+                    <span class="exam-section-title">✏️ ${exam.part2.title}</span>
+                    <span class="exam-section-weight">30 Pts</span>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <p class="exam-prompt"><strong>2.1.</strong> ${exam.part2.itemA.prompt}</p>
+                    <input type="text" id="p2-itemA-input" class="exam-fill-input" placeholder="${exam.part2.itemA.placeholder}" autocomplete="off" spellcheck="false">
+                    <div id="p2-itemA-feedback"></div>
+                </div>
+
+                <div>
+                    <p class="exam-prompt"><strong>2.2.</strong> ${exam.part2.itemB.prompt}</p>
+                    <input type="text" id="p2-itemB-input" class="exam-fill-input" placeholder="${exam.part2.itemB.placeholder}" autocomplete="off" spellcheck="false">
+                    <div id="p2-itemB-feedback"></div>
+                </div>
+
+                <div style="margin-top: 1.25rem;">
+                    <p class="exam-prompt"><strong>2.3.</strong> ${exam.part2.trueFalse.prompt}</p>
+                    <div class="quiz-options-container exam-true-false-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="p2-true-false" value="true">
+                            <span>Verdadero</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p2-true-false" value="false">
+                            <span>Falso</span>
+                        </label>
+                    </div>
+                    <div id="p2-true-false-feedback"></div>
+                </div>
+            </div>
+
+            <!-- PARTE III: RETO PRÁCTICO Y LABORATORIO DE CÓDIGO -->
+            <div class="exam-section-card" id="exam-card-part3">
+                <div class="exam-section-header">
+                    <span class="exam-section-title">💻 ${exam.part3.title}</span>
+                    <span class="exam-section-weight">${exam.part3.weight} Pts</span>
+                </div>
+                <div class="exam-prompt">${exam.part3.instructions}</div>
+                
+                <div class="challenge-editor-panel" style="height: 380px; margin-top: 1rem;">
                     <div class="editor-header">
-                        <span class="editor-filename">📁 ${evalData.filename}</span>
-                        <span class="editor-lang badge">${evalData.language.toUpperCase()}</span>
+                        <span class="editor-filename">📁 ${exam.part3.filename}</span>
+                        <span class="editor-lang badge">${exam.part3.language.toUpperCase()}</span>
                     </div>
                     
                     <div class="editor-workspace">
                         <div class="editor-line-numbers">
-                            1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15
+                            1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12
                         </div>
-                        <textarea id="challenge-editor" class="editor-textarea" spellcheck="false">${evalData.initialCode}</textarea>
+                        <textarea id="p3-editor" class="editor-textarea" spellcheck="false">${exam.part3.initialCode}</textarea>
                         
-                        ${evalData.language === 'html' ? `
+                        ${isHtmlOrCss ? `
                             <div class="preview-panel">
-                                <iframe id="html-preview" class="preview-iframe"></iframe>
+                                <iframe id="p3-html-preview" class="preview-iframe"></iframe>
                             </div>
                         ` : ''}
                     </div>
 
-                    <div class="console-panel">
-                        <div class="console-header">Pruebas del Sistema</div>
-                        <div class="console-logs" id="challenge-console">
-                            <div class="console-line info">Haz clic en "Validar Examen" para correr los tests automáticos.</div>
+                    <div class="console-panel" style="height: 100px;">
+                        <div class="console-header">Consola de Evaluación de Código</div>
+                        <div class="console-logs" id="p3-console">
+                            <div class="console-line info">Modifica tu solución si es necesario y entrega la hoja para calificarla.</div>
                         </div>
                     </div>
-
-                    <div class="editor-actions">
-                        <button id="btn-challenge-ai" class="btn btn-primary btn-sm btn-ai-action" style="background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);">
-                            <span>🤖 Pedir Pista</span>
-                        </button>
-                        <button id="btn-validate-challenge" class="btn btn-secondary btn-sm">Validar Examen</button>
-                    </div>
                 </div>
+                <div id="p3-feedback" style="margin-top:0.75rem;"></div>
             </div>
-        `;
 
-        const editor = document.getElementById("challenge-editor");
-        const consoleLogs = document.getElementById("challenge-console");
-        const btnValidate = document.getElementById("btn-validate-challenge");
-        const btnAi = document.getElementById("btn-challenge-ai");
+            <!-- ACCIONES Y CALIFICACIÓN -->
+            <div class="exam-summary-banner">
+                <div style="display:flex; justify-content:center; gap: 1rem; flex-wrap:wrap;">
+                    <button id="btn-exam-ai" class="btn btn-outline">
+                        <span>🤖 Tutor de Examen (Pistas)</span>
+                    </button>
+                    <button id="btn-submit-exam-sheet" class="btn btn-primary btn-glow">
+                        <span>📝 Entregar y Calificar Hoja de Examen</span>
+                    </button>
+                </div>
+                <div id="exam-overall-result" style="margin-top: 1.5rem;"></div>
+            </div>
+        </div>
+    `;
 
-        if (evalData.language === 'html') {
-            const previewFrame = document.getElementById("html-preview");
-            const updatePreview = () => {
-                const content = editor.value;
-                const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-                doc.open();
-                doc.write(content);
-                doc.close();
-            };
-            editor.addEventListener("input", updatePreview);
-            updatePreview();
+    // Selección interactiva en Parte 1 - Pregunta 1
+    let selectedP1Q1 = null;
+    const p1q1OptionsEls = tabContentExam.querySelectorAll("#p1-q1-options .quiz-option");
+    p1q1OptionsEls.forEach(opt => {
+        opt.addEventListener("click", () => {
+            p1q1OptionsEls.forEach(o => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            const radio = opt.querySelector("input");
+            radio.checked = true;
+            selectedP1Q1 = parseInt(radio.value);
+        });
+    });
+
+    // Selección interactiva en Parte 1 - Pregunta 2
+    let selectedP1Q2 = null;
+    const p1q2OptionsEls = tabContentExam.querySelectorAll("#p1-q2-options .quiz-option");
+    p1q2OptionsEls.forEach(opt => {
+        opt.addEventListener("click", () => {
+            p1q2OptionsEls.forEach(o => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            const radio = opt.querySelector("input");
+            radio.checked = true;
+            selectedP1Q2 = parseInt(radio.value);
+        });
+    });
+
+    let selectedP2TrueFalse = null;
+    const trueFalseOptionsEls = tabContentExam.querySelectorAll(".exam-true-false-options .quiz-option");
+    trueFalseOptionsEls.forEach(opt => {
+        opt.addEventListener("click", () => {
+            trueFalseOptionsEls.forEach(o => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            selectedP2TrueFalse = opt.querySelector("input").value === "true";
+        });
+    });
+
+    // Preview en vivo para HTML/CSS en Parte 3
+    const p3Editor = document.getElementById("p3-editor");
+    if (isHtmlOrCss) {
+        const previewIframe = document.getElementById("p3-html-preview");
+        const updateP3Preview = () => {
+            const content = p3Editor.value;
+            const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+            doc.open();
+            doc.write(content);
+            doc.close();
+        };
+        p3Editor.addEventListener("input", updateP3Preview);
+        updateP3Preview();
+    }
+
+    // Tutor de IA en examen
+    const btnExamAi = document.getElementById("btn-exam-ai");
+    btnExamAi.addEventListener("click", () => {
+        const itemAVal = document.getElementById("p2-itemA-input").value;
+        const itemBVal = document.getElementById("p2-itemB-input").value;
+        const codeVal = p3Editor.value;
+        const context = `Hoja de Examen: ${exam.title}\nParte I:\nQ1: ${exam.part1.q1.question}\nQ2: ${exam.part1.q2.question}\nParte II:\nA: ${exam.part2.itemA.prompt}\nB: ${exam.part2.itemB.prompt}\nParte III:\n${exam.part3.instructions}`;
+        consultarTutorIA(context, `Respuestas Parte 2: A=${itemAVal}, B=${itemBVal}\nCódigo Parte 3:\n${codeVal}`, "Orientación pedagógica y pistas para el examen oficial.");
+    });
+
+    // Envío y calificación de la Hoja de Examen
+    const btnSubmit = document.getElementById("btn-submit-exam-sheet");
+    btnSubmit.addEventListener("click", () => {
+        const itemAInput = document.getElementById("p2-itemA-input");
+        const itemBInput = document.getElementById("p2-itemB-input");
+        const itemAVal = itemAInput.value.trim().toLowerCase().replace(/['"`;]/g, '');
+        const itemBVal = itemBInput.value.trim().toLowerCase().replace(/['"`;]/g, '');
+        const p3Code = p3Editor.value;
+        const p3Console = document.getElementById("p3-console");
+
+        let earnedP1Q1 = 0;
+        let earnedP1Q2 = 0;
+        let earnedP2A = 0;
+        let earnedP2B = 0;
+        let earnedP2TrueFalse = 0;
+        let earnedP3 = 0;
+
+        // Validar Parte 1 - Q1
+        const p1q1Fb = document.getElementById("p1-q1-feedback");
+        if (selectedP1Q1 === exam.part1.q1.correct) {
+            earnedP1Q1 = exam.part1.q1.weight;
+            p1q1Fb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP1Q1} pts): ${exam.part1.q1.explanation}</div>`;
+        } else {
+            earnedP1Q1 = 0;
+            p1q1Fb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part1.q1.weight} pts): ${selectedP1Q1 === null ? 'No seleccionaste ninguna opción.' : 'La opción elegida no es la correcta.'}</div>`;
         }
 
-        btnAi.addEventListener("click", () => {
-            const code = editor.value;
-            const lastError = consoleLogs.textContent;
-            consultarTutorIA(`Examen práctico de la etapa: ${stage.title}\nReto: ${evalData.instructions}`, code, lastError);
-        });
+        // Validar Parte 1 - Q2
+        const p1q2Fb = document.getElementById("p1-q2-feedback");
+        if (selectedP1Q2 === exam.part1.q2.correct) {
+            earnedP1Q2 = exam.part1.q2.weight;
+            p1q2Fb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP1Q2} pts): ${exam.part1.q2.explanation}</div>`;
+        } else {
+            earnedP1Q2 = 0;
+            p1q2Fb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part1.q2.weight} pts): ${selectedP1Q2 === null ? 'No seleccionaste ninguna opción.' : 'La opción elegida no es la correcta.'}</div>`;
+        }
 
-        btnValidate.addEventListener("click", () => {
-            const code = editor.value;
-            consoleLogs.innerHTML = `<div class="console-line info">🚀 Corriendo validador de código...</div>`;
-            
-            setTimeout(() => {
-                const result = evalData.validate(code);
-                userState.stageAttempts[userState.currentStageIndex] += 1;
-                
-                if (result.success) {
-                    consoleLogs.innerHTML = `
-                        <div class="console-line success">✓ Test Exitoso: ${result.msg}</div>
-                        <div class="console-line success">🎉 Examen aprobado con 100% de efectividad!</div>
-                    `;
-                    
-                    userState.completedStages[userState.currentStageIndex] = true;
-                    userState.stageGrades[userState.currentStageIndex] = 100;
-                    if (userState.currentStageIndex < 999) {
-                        const isNextCheckpoint = (userState.currentStageIndex + 1) % 100 === 0;
-                        if (!isNextCheckpoint) {
-                            userState.unlockedStages[userState.currentStageIndex + 1] = true;
-                        }
-                    }
-                    addXp(stage.xpAward);
-                    saveProgress();
-                    applyState();
-                    
-                    setTimeout(() => {
-                        renderStageExam();
-                    }, 1500);
-                } else {
-                    consoleLogs.innerHTML = `
-                        <div class="console-line error">❌ Test Fallido: ${result.msg}</div>
-                        <div class="console-line error">Revisa tu lógica o solicita ayuda con el tutor de IA.</div>
-                    `;
-                    userState.stageGrades[userState.currentStageIndex] = 0;
-                    saveProgress();
-                    applyState();
+        // Validar Parte 2 - Item A
+        const p2aFb = document.getElementById("p2-itemA-feedback");
+        const isMatchA = exam.part2.itemA.expected.some(exp => itemAVal === exp.toLowerCase() || itemAVal.includes(exp.toLowerCase()));
+        if (itemAVal.length > 0 && isMatchA) {
+            earnedP2A = exam.part2.itemA.weight;
+            p2aFb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP2A} pts): ${exam.part2.itemA.explanation}</div>`;
+        } else {
+            earnedP2A = 0;
+            p2aFb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part2.itemA.weight} pts): ${itemAVal.length === 0 ? 'Campo vacío.' : 'Término incorrecto.'} Pista: ${exam.part2.itemA.explanation}</div>`;
+        }
+
+        // Validar Parte 2 - Item B
+        const p2bFb = document.getElementById("p2-itemB-feedback");
+        const isMatchB = exam.part2.itemB.expected.some(exp => itemBVal === exp.toLowerCase() || itemBVal.includes(exp.toLowerCase()));
+        if (itemBVal.length > 0 && isMatchB) {
+            earnedP2B = exam.part2.itemB.weight;
+            p2bFb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP2B} pts): ${exam.part2.itemB.explanation}</div>`;
+        } else {
+            earnedP2B = 0;
+            p2bFb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part2.itemB.weight} pts): ${itemBVal.length === 0 ? 'Campo vacío.' : 'Término incorrecto.'} Pista: ${exam.part2.itemB.explanation}</div>`;
+        }
+
+        // Validar Parte 2 - Verdadero o Falso
+        const trueFalseFb = document.getElementById("p2-true-false-feedback");
+        if (selectedP2TrueFalse === exam.part2.trueFalse.correct) {
+            earnedP2TrueFalse = exam.part2.trueFalse.weight;
+            trueFalseFb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP2TrueFalse} pts): ${exam.part2.trueFalse.explanation}</div>`;
+        } else {
+            trueFalseFb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part2.trueFalse.weight} pts): ${selectedP2TrueFalse === null ? 'No seleccionaste ninguna opción.' : 'La respuesta elegida no es correcta.'}</div>`;
+        }
+
+        // Validar Parte 3 - Código
+        const p3Fb = document.getElementById("p3-feedback");
+        const p3Result = exam.part3.validate(p3Code);
+        if (p3Result.success) {
+            earnedP3 = exam.part3.weight;
+            p3Console.innerHTML = `<div class="console-line success">✓ ${p3Result.msg}</div>`;
+            p3Fb.innerHTML = `<div class="exam-feedback-item correct">✓ Laboratorio Aprobado (+${earnedP3} pts): Pruebas automáticas superadas con éxito.</div>`;
+        } else {
+            earnedP3 = 0;
+            p3Console.innerHTML = `<div class="console-line error">❌ ${p3Result.msg}</div>`;
+            p3Fb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Laboratorio Incorrecto (0/${exam.part3.weight} pts): ${p3Result.msg}</div>`;
+        }
+
+        const totalScore = earnedP1Q1 + earnedP1Q2 + earnedP2A + earnedP2B + earnedP2TrueFalse + earnedP3;
+        const passed = totalScore >= 70;
+
+        userState.stageAttempts[userState.currentStageIndex] += 1;
+        userState.stageGrades[userState.currentStageIndex] = totalScore;
+
+        const overallBox = document.getElementById("exam-overall-result");
+        if (passed) {
+            userState.completedStages[userState.currentStageIndex] = true;
+            if (userState.currentStageIndex < 999) {
+                const isNextCheckpoint = (userState.currentStageIndex + 1) % 100 === 0;
+                if (!isNextCheckpoint) {
+                    userState.unlockedStages[userState.currentStageIndex + 1] = true;
                 }
-            }, 800);
-        });
-    }
+            }
+            addXp(stage.xpAward);
+            saveProgress();
+            applyState();
+
+            overallBox.innerHTML = `
+                <div class="card" style="border: 2px solid var(--success); background: rgba(16, 185, 129, 0.08); padding: 1.5rem; text-align:center;">
+                    <h3 style="color:#34d399; font-size:1.4rem; margin-bottom:0.5rem;">🎉 ¡EXAMEN OFICIAL APROBADO!</h3>
+                    <p style="font-size:1.1rem; font-weight:700;">Calificación Final: <span style="color:#34d399;">${totalScore} / 100 Pts (${totalScore}%)</span></p>
+                    <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:0.5rem;">Desglose: Parte I (${earnedP1Q1 + earnedP1Q2} pts) • Parte II (${earnedP2A + earnedP2B + earnedP2TrueFalse} pts) • Parte III (${earnedP3} pts)</p>
+                    <button class="btn btn-primary" style="margin-top:1.25rem;" onclick="document.getElementById('btn-next-lesson').click()">Avanzar a la Siguiente Etapa →</button>
+                </div>
+            `;
+            showToast(`🎉 ¡Etapa aprobada con éxito! Nota: ${totalScore}% (+${stage.xpAward} XP)`, "success");
+            triggerConfetti();
+        } else {
+            saveProgress();
+            applyState();
+            overallBox.innerHTML = `
+                <div class="card" style="border: 2px solid var(--danger); background: rgba(244, 63, 94, 0.08); padding: 1.5rem; text-align:center;">
+                    <h3 style="color:#f87171; font-size:1.3rem; margin-bottom:0.5rem;">❌ Evaluación No Aprobada</h3>
+                    <p style="font-size:1.1rem; font-weight:700;">Puntaje Obtenido: <span style="color:#f87171;">${totalScore} / 100 Pts</span> (Se requiere mínimo 70%)</p>
+                    <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:0.5rem;">Revisa las correcciones marcadas en rojo en cada sección, ajusta tus respuestas y vuelve a entregar la hoja.</p>
+                </div>
+            `;
+            showToast(`❌ Calificación insuficiente (${totalScore}%). Revisa las correcciones marcadas.`, "danger");
+        }
+    });
 }
 
 // --- RENDERIZAR EXAMEN TOTAL (MEGAPRUEBA CADA 100 ETAPAS) ---
 let activeMegaQuestionIdx = 0;
 
 function setupMegaExam() {
-    switchView("lessons-view"); // Cargar visor
+    switchView("lessons-view");
     renderMegaExamView();
 }
 
 function renderMegaExamView() {
-    isShowingMegaExam = true;
+    const currentCheckpoint = Math.floor((userState.currentStageIndex + 1) / 100);
+    const startStage = (currentCheckpoint - 1) * 100 + 1;
+    const endStage = currentCheckpoint * 100;
     
-    // Generar las 5 preguntas del examen de forma aleatoria a partir de los quizzes del bloque anterior
-    const blockIndex = Math.floor(userState.currentStageIndex / 100);
-    const startRange = blockIndex * 100;
-    const endRange = startRange + 98; // Excluimos la etapa 100 en sí misma
+    lessonStageTitle.textContent = `🏆 Examen Integral de Sección: Etapas ${startStage} a ${endStage}`;
     
-    lessonStageTitle.textContent = `🏆 Examen Total: Sección ${blockIndex + 1}`;
-    
-    // Inundar la barra lateral de pestañas para inhabilitar navegación
     lessonsMenu.innerHTML = `
-        <div class="current-stage-badge" style="background:var(--warning-glow); color:var(--warning); border-color:rgba(245,158,11,0.2);">
-            ⚠️ Control Activo
-        </div>
-        <p style="font-size:0.75rem; color:var(--text-muted); padding:1rem 0.5rem; text-align:center;">
-            Completa esta megaprueba para desbloquear las próximas 100 etapas.
-        </p>
+        <a href="#" class="lesson-menu-item active" data-tab="mega-exam">
+            <span>🏁 Examen Total de Certificación</span>
+        </a>
     `;
 
-    // Seleccionar 5 preguntas únicas de las etapas anteriores de esta sección
     if (megaExamQuestions.length === 0) {
-        const pool = [];
-        for (let i = startRange; i <= endRange; i++) {
-            const stage = COURSE_DATA[i];
-            if (stage && stage.quiz) {
-                pool.push({
-                    q: stage.quiz.q,
-                    options: stage.quiz.options,
-                    correct: stage.quiz.correct,
-                    explanation: stage.quiz.explanation,
-                    originTitle: stage.title
-                });
-            }
-        }
+        megaExamQuestions = [];
+        currentMegaExamAnswers = new Array(10).fill(null);
         
-        // Barajar y tomar 5
-        const shuffled = pool.sort(() => 0.5 - Math.random());
-        megaExamQuestions = shuffled.slice(0, 5);
-        currentMegaExamAnswers = new Array(5).fill(null);
-        activeMegaQuestionIdx = 0;
+        for (let i = 0; i < 10; i++) {
+            const randomStageIdx = (currentCheckpoint - 1) * 100 + Math.floor(Math.random() * 100);
+            const st = COURSE_DATA[randomStageIdx];
+            megaExamQuestions.push({
+                stageTitle: st.title,
+                q: st.quiz.q,
+                options: st.quiz.options,
+                correct: st.quiz.correct
+            });
+        }
     }
 
-    renderMegaQuestionCard();
-}
-
-function renderMegaQuestionCard() {
-    const qData = megaExamQuestions[activeMegaQuestionIdx];
-    const isLast = activeMegaQuestionIdx === 4;
-
+    const currentQ = megaExamQuestions[activeMegaQuestionIdx];
     let optionsHtml = "";
-    qData.options.forEach((opt, oIdx) => {
-        const isSelected = currentMegaExamAnswers[activeMegaQuestionIdx] === oIdx;
+    currentQ.options.forEach((opt, idx) => {
+        const isSelected = currentMegaExamAnswers[activeMegaQuestionIdx] === idx;
         optionsHtml += `
             <label class="quiz-option ${isSelected ? 'selected' : ''}">
-                <input type="radio" name="mega-exam-radio" value="${oIdx}" ${isSelected ? 'checked' : ''}>
+                <input type="radio" name="mega-exam-radio" value="${idx}" ${isSelected ? 'checked' : ''}>
                 <span>${opt}</span>
             </label>
         `;
     });
 
-    // Dibujar en el bloque de Teoría directamente, ocultando los demás contenidos
-    tabContentTheory.innerHTML = `
-        <div class="mega-exam-card card">
-            <span class="mega-exam-badge">🎖️</span>
-            <h2>Evaluación Acumulativa: Pregunta ${activeMegaQuestionIdx + 1} de 5</h2>
-            <p style="font-size:0.75rem; color:var(--accent-light); text-transform:uppercase; font-weight:700;">Origen: ${qData.originTitle}</p>
-            
-            <p style="font-size:1.1rem; font-weight:500; margin: 1.5rem 0;">${qData.q}</p>
-            <div class="quiz-options-container">
-                ${optionsHtml}
-            </div>
-            
-            <div class="quiz-actions" style="margin-top:1.5rem; display:flex; justify-content:space-between;">
-                ${activeMegaQuestionIdx > 0 ? `<button id="btn-mega-prev" class="btn btn-outline">Anterior</button>` : '<div></div>'}
-                <button id="btn-mega-next" class="btn btn-primary">${isLast ? 'Finalizar Megaprueba' : 'Siguiente Pregunta'}</button>
-            </div>
-        </div>
-    `;
-
-    // Ocultar resto de pestañas
+    tabContentExam.classList.remove("hidden");
+    tabContentExam.classList.add("active");
+    tabContentTheory.classList.add("hidden");
     tabContentExamples.classList.add("hidden");
     tabContentSandbox.classList.add("hidden");
     tabContentQuiz.classList.add("hidden");
-    tabContentExam.classList.add("hidden");
 
-    // Eventos de selección
-    const options = tabContentTheory.querySelectorAll(".quiz-option");
-    options.forEach(opt => {
-        opt.addEventListener("click", () => {
-            options.forEach(o => o.classList.remove("selected"));
-            opt.classList.add("selected");
-            const radio = opt.querySelector("input");
-            radio.checked = true;
-            currentMegaExamAnswers[activeMegaQuestionIdx] = parseInt(radio.value);
-        });
-    });
-
-    // Control de navegación
-    const btnNext = document.getElementById("btn-mega-next");
-    const btnPrev = document.getElementById("btn-mega-prev");
-
-    if (btnPrev) {
-        btnPrev.addEventListener("click", () => {
-            activeMegaQuestionIdx -= 1;
-            renderMegaQuestionCard();
-        });
-    }
-
-    btnNext.addEventListener("click", () => {
-        if (currentMegaExamAnswers[activeMegaQuestionIdx] === null) {
-            showToast("⚠️ Selecciona una opción antes de proceder.", "warning");
-            return;
-        }
-
-        if (isLast) {
-            evaluateMegaExam();
-        } else {
-            activeMegaQuestionIdx += 1;
-            renderMegaQuestionCard();
-        }
-    });
-}
-
-function evaluateMegaExam() {
-    let score = 0;
-    megaExamQuestions.forEach((q, idx) => {
-        if (currentMegaExamAnswers[idx] === q.correct) score++;
-    });
-
-    const passed = score >= 4; // Requiere al menos 4 de 5 respuestas correctas (80%)
-    
-    if (passed) {
-        // Aprobado: Desbloquea la etapa 101, 201, etc.
-        showToast("🎉 ¡Excelente! Has aprobado la Megaprueba Acumulativa.", "success");
-        userState.completedStages[userState.currentStageIndex] = true;
-        userState.stageGrades[userState.currentStageIndex] = Math.round((score / 5) * 100);
-        if (userState.currentStageIndex < 999) {
-            userState.unlockedStages[userState.currentStageIndex + 1] = true;
-        }
-        addXp(300); // Super XP bonus
-        saveProgress();
-        applyState();
-        
-        // Limpiar estados de megaprueba
-        isShowingMegaExam = false;
-        megaExamQuestions = [];
-        currentMegaExamAnswers = [];
-        
-        switchView("dashboard");
-    } else {
-        // Reprobado
-        showToast("❌ Has reprobado el Examen Total. Necesitas 4 aciertos mínimos.", "danger");
-        
-        tabContentTheory.innerHTML = `
-            <div class="result-card card" style="max-width: 500px; margin: 2rem auto; text-align:center;">
-                <div class="result-icon">💀</div>
-                <h2>Examen Total Reprobado</h2>
-                <p>Obtuviste <strong>${score} de 5</strong> aciertos. Requieres un mínimo de 4 respuestas correctas para proceder.</p>
-                <button id="btn-retry-mega" class="btn btn-primary" style="margin-top: 1.5rem;">Reintentar Examen</button>
+    tabContentExam.innerHTML = `
+        <div class="exam-sheet" style="max-width: 800px;">
+            <div class="exam-sheet-header">
+                <div>
+                    <span class="exam-sheet-badge">🏆 Gran Evaluación de Sección</span>
+                    <h2 class="exam-sheet-title">Examen Integral de 100 Etapas (Checkpoint ${currentCheckpoint})</h2>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">Pregunta ${activeMegaQuestionIdx + 1} de 10 • Se requiere 80% (8/10) para superar el checkpoint y desbloquear el siguiente bloque.</p>
+                </div>
             </div>
-        `;
-        
-        document.getElementById("btn-retry-mega").addEventListener("click", () => {
-            megaExamQuestions = []; // resetear pool para generar preguntas nuevas
-            renderMegaExamView();
-        });
-    }
-}
 
-// --- VISOR DE PESTAÑAS (SANDBOX RUNNER) ---
-function runSandboxCode() {
-    const code = sandboxCode.value;
-    sandboxOutput.textContent = "";
+            <div class="exam-section-card">
+                <span class="badge badge-accent" style="margin-bottom:0.75rem; display:inline-block;">Tema: ${currentQ.stageTitle}</span>
+                <p class="exam-prompt" style="font-size:1.1rem; font-weight:600;">${currentQ.q}</p>
+                <div class="quiz-options-container">
+                    ${optionsHtml}
+                </div>
+            </div>
 
-    const originalLog = console.log;
-    let loggedOutput = [];
-    console.log = function(...args) {
-        loggedOutput.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(" "));
-        originalLog.apply(console, args);
-    };
-
-    try {
-        const run = new Function(code);
-        run();
-        if (loggedOutput.length > 0) {
-            sandboxOutput.textContent = loggedOutput.join("\n");
-        } else {
-            sandboxOutput.textContent = "Ejecución finalizada con éxito (la consola no arrojó salidas).";
-        }
-    } catch(e) {
-        sandboxOutput.textContent = "❌ Error sintáctico:\n" + e.message;
-    } finally {
-        console.log = originalLog;
-    }
-}
-
-// --- RENDERIZAR BOLETÍN DE NOTAS ---
-function renderGrades() {
-    const completedCount = userState.completedStages.filter(Boolean).length;
-    metricCompletedQuizzes.textContent = `${completedCount} / 1000`;
-
-    const approvedGrades = userState.stageGrades.filter(g => g !== null && g > 0);
-    let avg = 0;
-    if (approvedGrades.length > 0) {
-        avg = Math.round(approvedGrades.reduce((a, b) => a + b, 0) / approvedGrades.length);
-    }
-    metricAverage.textContent = `${avg}%`;
-
-    const allCompleted = userState.completedStages.every(stage => stage === true);
-    metricStatus.textContent = allCompleted ? "Graduado" : "Cursando";
-
-    // Paginación en la tabla para evitar colapsar la memoria al listar 1000 filas
-    // Mostraremos un desplegable o un buscador
-    gradesTableBody.innerHTML = `
-        <tr>
-            <td colspan="6" style="text-align:center; padding: 2rem;">
-                <p style="margin-bottom:1rem;">Buscador Académico: Selecciona el rango de etapas que deseas visualizar:</p>
-                <select id="select-grade-range" class="btn btn-outline btn-sm" style="background:var(--bg-input); padding: 0.5rem 1rem;">
-                    <option value="0-99">Etapas 1 a 100</option>
-                    <option value="100-199">Etapas 101 a 200</option>
-                    <option value="200-299">Etapas 201 a 300</option>
-                    <option value="300-399">Etapas 301 a 400</option>
-                    <option value="400-499">Etapas 401 a 500</option>
-                    <option value="500-599">Etapas 501 a 600</option>
-                    <option value="600-699">Etapas 601 a 700</option>
-                    <option value="700-799">Etapas 701 a 800</option>
-                    <option value="800-899">Etapas 801 a 900</option>
-                    <option value="900-999">Etapas 901 a 1000</option>
-                </select>
-            </td>
-        </tr>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 1.5rem; flex-wrap:wrap; gap:1rem;">
+                <button id="btn-prev-mega" class="btn btn-outline" ${activeMegaQuestionIdx === 0 ? 'disabled' : ''}>← Anterior</button>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Respondidas: ${currentMegaExamAnswers.filter(a => a !== null).length} / 10</span>
+                ${activeMegaQuestionIdx < 9 ? 
+                    `<button id="btn-next-mega" class="btn btn-primary">Siguiente →</button>` : 
+                    `<button id="btn-finish-mega" class="btn btn-primary btn-glow">Finalizar Examen Integral</button>`
+                }
+            </div>
+            <div id="mega-exam-result" style="margin-top:1.5rem;"></div>
+        </div>
     `;
 
-    const select = document.getElementById("select-grade-range");
-    select.addEventListener("change", () => {
-        const val = select.value.split("-");
-        const start = parseInt(val[0]);
-        const end = parseInt(val[1]);
-        renderGradesRows(start, end);
+    // Event listeners para opciones
+    const opts = tabContentExam.querySelectorAll(".quiz-option");
+    opts.forEach(opt => {
+        opt.addEventListener("click", () => {
+            opts.forEach(o => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            const val = parseInt(opt.querySelector("input").value);
+            currentMegaExamAnswers[activeMegaQuestionIdx] = val;
+        });
     });
 
-    renderGradesRows(0, 99); // Render inicial
+    const btnPrevMega = document.getElementById("btn-prev-mega");
+    if (btnPrevMega) {
+        btnPrevMega.addEventListener("click", () => {
+            if (activeMegaQuestionIdx > 0) {
+                activeMegaQuestionIdx -= 1;
+                renderMegaExamView();
+            }
+        });
+    }
 
-    if (allCompleted) {
+    const btnNextMega = document.getElementById("btn-next-mega");
+    if (btnNextMega) {
+        btnNextMega.addEventListener("click", () => {
+            if (activeMegaQuestionIdx < 9) {
+                activeMegaQuestionIdx += 1;
+                renderMegaExamView();
+            }
+        });
+    }
+
+    const btnFinishMega = document.getElementById("btn-finish-mega");
+    if (btnFinishMega) {
+        btnFinishMega.addEventListener("click", () => {
+            let correctCount = 0;
+            megaExamQuestions.forEach((q, idx) => {
+                if (currentMegaExamAnswers[idx] === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            const percent = Math.round((correctCount / 10) * 100);
+            const passed = percent >= 80;
+            const resBox = document.getElementById("mega-exam-result");
+
+            if (passed) {
+                userState.unlockedStages[userState.currentStageIndex + 1] = true;
+                addXp(500);
+                saveProgress();
+                applyState();
+
+                resBox.innerHTML = `
+                    <div class="card" style="border:2px solid var(--success); background:rgba(16,185,129,0.08); padding:1.5rem; text-align:center;">
+                        <h3 style="color:#34d399;">🎉 ¡CHECKPOINT SUPERADO CON ÉXITO!</h3>
+                        <p style="font-size:1.1rem; font-weight:700;">Nota Obtenida: ${percent}% (${correctCount}/10 correctas)</p>
+                        <p style="color:var(--text-secondary); margin-top:0.5rem;">Has desbloqueado el siguiente gran bloque curricular. +500 XP otorgados.</p>
+                        <button class="btn btn-primary" style="margin-top:1rem;" onclick="switchView('dashboard')">Regresar al Panel Principal</button>
+                    </div>
+                `;
+                showToast(`🏆 ¡Checkpoint ${currentCheckpoint} Aprobado! (+500 XP)`, "success");
+                triggerConfetti();
+            } else {
+                resBox.innerHTML = `
+                    <div class="card" style="border:2px solid var(--danger); background:rgba(244,63,94,0.08); padding:1.5rem; text-align:center;">
+                        <h3 style="color:#f87171;">❌ No alcanzaste el puntaje mínimo (80%)</h3>
+                        <p style="font-size:1.1rem; font-weight:700;">Nota Obtenida: ${percent}% (${correctCount}/10 correctas)</p>
+                        <p style="color:var(--text-secondary); margin-top:0.5rem;">Repasa los conceptos de las etapas previas y vuelve a presentar la prueba.</p>
+                        <button class="btn btn-secondary" style="margin-top:1rem;" onclick="activeMegaQuestionIdx=0; currentMegaExamAnswers.fill(null); renderMegaExamView();">Reintentar Examen</button>
+                    </div>
+                `;
+                showToast(`❌ Examen integral no aprobado (${percent}%).`, "danger");
+            }
+        });
+    }
+}
+
+// --- EJECUCIÓN DEL SANDBOX ---
+function runSandboxCode() {
+    const code = sandboxCode.value;
+    const stage = COURSE_DATA[userState.currentStageIndex];
+    sandboxOutput.innerHTML = "";
+
+    if (stage.category === "html" || stage.category === "css" || stage.category === "html_css_conjunto") {
+        const iframe = document.createElement("iframe");
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        sandboxOutput.appendChild(iframe);
+        
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(code);
+        doc.close();
+    } else {
+        // Javascript console runner
+        let logs = [];
+        const originalLog = console.log;
+        console.log = function(...args) {
+            logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(" "));
+            originalLog.apply(console, args);
+        };
+
+        try {
+            const run = new Function(code);
+            run();
+            if (logs.length === 0) {
+                sandboxOutput.innerHTML = `<span style="color:var(--text-muted); font-style:italic;">Código ejecutado sin salida en consola.</span>`;
+            } else {
+                sandboxOutput.innerHTML = logs.map(l => `<div>> ${l}</div>`).join("");
+            }
+        } catch(e) {
+            sandboxOutput.innerHTML = `<span style="color:var(--danger);">> Error: ${e.message}</span>`;
+        } finally {
+            console.log = originalLog;
+        }
+    }
+}
+
+// --- TUTOR DE INTELIGENCIA ARTIFICIAL (FLOTANTE) ---
+async function consultarTutorIA(contexto, codigo, errorOutput) {
+    const panel = document.getElementById("ai-tutor-panel");
+    const aiMessage = document.getElementById("ai-tutor-message");
+    const apiKey = localStorage.getItem("gemini_api_key");
+
+    panel.classList.remove("hidden");
+    aiMessage.innerHTML = `
+        <div class="ai-loading-spinner" style="padding:1rem 0;">
+            <div class="spinner"></div>
+            <p style="font-size:0.85rem; margin-top:0.5rem;">Analizando tu código y generando orientación pedagógica...</p>
+        </div>
+    `;
+
+    if (!apiKey) {
+        setTimeout(() => {
+            aiMessage.innerHTML = `
+                <p><strong>💡 Tutor de Codex Academy (Modo Offline):</strong></p>
+                <p>Revisa la teoría del módulo para verificar la sintaxis de las etiquetas, propiedades o funciones requeridas.</p>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.5rem;">Para recibir respuestas generadas en vivo con IA, configura tu <em>Gemini API Key</em> en el campo de configuración superior.</p>
+            `;
+        }, 600);
+        return;
+    }
+
+    try {
+        const prompt = `
+        Eres el tutor de programación de Codex Academy.
+        El estudiante está en el siguiente contexto:
+        ${contexto}
+        
+        Su código actual es:
+        ${codigo}
+        
+        Salida / error observado:
+        ${errorOutput}
+        
+        Instrucciones:
+        Explica de manera pedagógica y alentadora en español cuál es el error o qué le falta, dándole una pista clara sin darle la respuesta completa copiada, para que aprenda a razonar. Sé breve (máximo 2 párrafos). Formatea con etiquetas HTML directas (p, strong, code).
+        `;
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const text = data.candidates[0].content.parts[0].text;
+            aiMessage.innerHTML = text;
+        } else {
+            aiMessage.innerHTML = `<p style="color:var(--danger)">No se pudo conectar con la API de Gemini. Verifica tu llave API.</p>`;
+        }
+    } catch(e) {
+        aiMessage.innerHTML = `<p style="color:var(--danger)">Error al consultar al tutor: ${e.message}</p>`;
+    }
+}
+
+// --- BOLETÍN DE CALIFICACIONES ---
+function renderGrades() {
+    const completedList = userState.completedStages.map((c, i) => c ? i : null).filter(i => i !== null);
+    metricCompletedQuizzes.textContent = `${completedList.length} / 1000`;
+
+    const approvedGrades = userState.stageGrades.filter(g => g !== null && g > 0);
+    if (approvedGrades.length > 0) {
+        const sum = approvedGrades.reduce((a, b) => a + b, 0);
+        const avg = Math.round(sum / approvedGrades.length);
+        metricAverage.textContent = `${avg}%`;
+        metricStatus.textContent = avg >= 70 ? "Sobresaliente" : "En Recuperación";
+    } else {
+        metricAverage.textContent = "-";
+        metricStatus.textContent = "Sin Evaluaciones";
+    }
+
+    renderGradesRows(0, 49); // Primeras 50 etapas
+
+    if (completedList.length === 1000) {
         gradesCertBanner.innerHTML = `
-            <div class="grades-cert-unlocked-banner">
-                <h3>🎖️ ¡DIPLOMA DESBLOQUEADO!</h3>
-                <p>Has aprobado con éxito las 1000 etapas de la academia. Tu promedio final es del <strong>${avg}%</strong>.</p>
+            <div class="card" style="border: 2px solid var(--accent); background: rgba(139, 92, 246, 0.08); text-align:center; padding: 1.5rem;">
+                <h3>🎓 ¡Has completado todas las 1000 etapas del curso!</h3>
+                <p style="margin: 0.5rem 0 1rem 0;">Tu diploma oficial de graduación está listo para su emisión.</p>
                 <button class="btn btn-primary" onclick="switchView('certificate-view')">Ver mi Certificado</button>
             </div>
         `;
@@ -1711,7 +2045,6 @@ function renderGrades() {
 }
 
 function renderGradesRows(start, end) {
-    // Eliminar filas anteriores que no sean el selector
     const rows = gradesTableBody.querySelectorAll("tr:not(:first-child)");
     rows.forEach(r => r.remove());
 
@@ -1736,186 +2069,64 @@ function renderGradesRows(start, end) {
         row.innerHTML = `
             <td><strong>Etapa ${idx + 1}</strong></td>
             <td>${stage.title}</td>
-            <td>${stage.evaluation.type === 'quiz' ? 'Conceptual' : 'Reto de Código'}</td>
+            <td>Hoja de Evaluación</td>
             <td>${attempts}</td>
-            <td>${maxGrade !== null ? `${maxGrade}%` : '-'}</td>
-            <td><span class="status-badge ${stateClass}">${stateText}</span></td>
+            <td>${maxGrade !== null ? maxGrade + '%' : '-'}</td>
+            <td><span class="grade-status ${stateClass}">${stateText}</span></td>
         `;
         gradesTableBody.appendChild(row);
     }
 }
 
-// --- RENDERIZAR CERTIFICADO ---
+// --- DIPLOMA / CERTIFICADO ---
 function renderCertificate() {
+    certStudentName.textContent = userState.name || "Estudiante";
     const approvedGrades = userState.stageGrades.filter(g => g !== null && g > 0);
-    let avg = 0;
-    if (approvedGrades.length > 0) {
-        avg = Math.round(approvedGrades.reduce((a, b) => a + b, 0) / approvedGrades.length);
-    }
-
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    
-    certStudentName.textContent = userState.name;
+    const avg = approvedGrades.length > 0 ? Math.round(approvedGrades.reduce((a, b) => a + b, 0) / approvedGrades.length) : 100;
     certGrade.textContent = `${avg}%`;
-    certDate.textContent = `${day}/${month}/${year}`;
-    
-    const hash = Math.floor(1000 + Math.random() * 8999);
-    certId.textContent = `CDX-1K-${hash}-WEB`;
+    certDate.textContent = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    certId.textContent = `CODEX-1000-${Math.floor(100000 + Math.random() * 900000)}`;
 }
 
-// --- EFECTOS DE CONFETI ---
-function triggerConfetti() {
-    confettiOverlay.innerHTML = "";
-    const colors = ["#8b5cf6", "#06b6d4", "#10b981", "#fbbf24", "#f43f5e"];
-    
-    for (let i = 0; i < 80; i++) {
-        const particle = document.createElement("div");
-        particle.className = "confetti-particle";
-        
-        particle.style.left = `${Math.random() * 100}vw`;
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.animationDelay = `${Math.random() * 2}s`;
-        particle.style.animationDuration = `${1.5 + Math.random() * 2}s`;
-        particle.style.transform = `rotate(${Math.random() * 360}deg)`;
-        
-        confettiOverlay.appendChild(particle);
-    }
-
-    setTimeout(() => {
-        confettiOverlay.innerHTML = "";
-    }, 5000);
-}
-
-// --- SISTEMA DE TOASTS ---
+// --- UTILIDADES (TOAST & CONFETTI) ---
 function showToast(message, type = "info") {
-    const container = document.getElementById("toast-container");
     const toast = document.createElement("div");
-    toast.className = `toast ${type}`;
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = message;
     
-    let icon = "🔔";
-    if (type === "success") icon = "✓";
-    else if (type === "danger") icon = "❌";
-    else if (type === "warning") icon = "⚠️";
-    
-    toast.innerHTML = `
-        <span>${icon}</span>
-        <span>${message}</span>
-    `;
+    let container = document.getElementById("toast-container");
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "toast-container";
+        container.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;";
+        document.body.appendChild(container);
+    }
     
     container.appendChild(toast);
-
     setTimeout(() => {
         toast.style.opacity = "0";
-        toast.style.transform = "translateX(100%)";
-        toast.style.transition = "all 0.5s ease-out";
-        setTimeout(() => {
-            toast.remove();
-        }, 500);
-    }, 3500);
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
 }
 
-// --- SISTEMA DE TUTOR DE IA (GEMINI API) ---
-function parseMarkdown(text) {
-    let escaped = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+function triggerConfetti() {
+    if (!confettiOverlay) return;
+    confettiOverlay.classList.remove("hidden");
+    confettiOverlay.innerHTML = "";
     
-    // Code blocks
-    escaped = escaped.replace(/```(?:javascript|html|css|js)?([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-    // Inline code
-    escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
-    // Bold
-    escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    // Headers
-    escaped = escaped.replace(/###\s+([^\n]+)/g, '<h3>$1</h3>');
-    escaped = escaped.replace(/##\s+([^\n]+)/g, '<h2>$1</h2>');
-    
-    // Paragraphs
-    return escaped.split('\n').map(line => {
-        const trimmed = line.trim();
-        if (!trimmed) return '';
-        if (trimmed.startsWith('<pre>') || trimmed.endsWith('</pre>') || trimmed.startsWith('<h') || trimmed.startsWith('<code')) {
-            return line;
-        }
-        return `<p>${line}</p>`;
-    }).join('\n');
-}
-
-async function consultarTutorIA(contextoReto, codigoAlumno, mensajeError) {
-    const apiKey = localStorage.getItem("gemini_api_key");
-    const aiPanel = document.getElementById("ai-tutor-panel");
-    const aiResponseBody = document.getElementById("ai-response-body");
-
-    if (!apiKey) {
-        showToast("⚠️ Configura primero tu Gemini API Key en la barra lateral para usar el tutor de IA.", "warning");
-        return;
+    const colors = ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#ffffff"];
+    for (let i = 0; i < 70; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = `${Math.random() * 2}s`;
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiOverlay.appendChild(piece);
     }
-
-    aiPanel.classList.remove("hidden");
-    aiResponseBody.innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 3rem 0; gap:1rem;">
-            <div class="badge-dot" style="width:12px; height:12px; background-color:var(--accent-light);"></div>
-            <p style="color:var(--text-secondary); font-size:0.9rem; font-weight:500;">Pensando... El tutor de IA está analizando tu código.</p>
-        </div>
-    `;
-
-    const prompt = `
-    Actúa como un tutor de programación extremadamente amable, pedagógico y comprensivo en español.
-    El estudiante está resolviendo un reto o estudiando una lección en la Etapa ${userState.currentStageIndex + 1} de Codex Academy.
     
-    CONTEXTO Y TEMA:
-    ${contextoReto}
-
-    CÓDIGO ACTUAL DEL ALUMNO:
-    \`\`\`
-    ${codigoAlumno}
-    \`\`\`
-
-    RESULTADO O ERROR ACTUAL DE LA EJECUCIÓN/CONSOLA:
-    "${mensajeError}"
-
-    INSTRUCCIONES PARA TI (EL TUTOR):
-    1. Analiza el error y el código del alumno.
-    2. Explícale qué está haciendo mal y por qué ocurre ese comportamiento, de manera clara y didáctica.
-    3. Proporciónale una o dos pistas prácticas sobre cómo avanzar.
-    4. ¡IMPORTANTE! No le des el código completo corregido directamente. Deja que piense y corrija su solución por sí mismo.
-    `;
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: prompt }]
-                }]
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`Código de estado HTTP: ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
-            const rawText = data.candidates[0].content.parts[0].text;
-            aiResponseBody.innerHTML = parseMarkdown(rawText);
-        } else {
-            aiResponseBody.innerHTML = `<p style="color:var(--danger)">⚠️ La API de Gemini no devolvió una respuesta válida. Verifica tu clave de API e inténtalo de nuevo.</p>`;
-        }
-    } catch(error) {
-        console.error("Error consultando el tutor de IA:", error);
-        aiResponseBody.innerHTML = `
-            <p style="color:var(--danger); font-weight:bold;">❌ Error de conexión con el tutor</p>
-            <p style="font-size:0.85rem;">No se pudo realizar la consulta. Detalles: ${error.message}</p>
-            <p style="font-size:0.85rem; margin-top:1rem;">Por favor, asegúrate de que la <strong>Gemini API Key</strong> guardada en la barra lateral sea correcta y activa, y que tengas conexión a internet.</p>
-        `;
-    }
+    setTimeout(() => {
+        confettiOverlay.classList.add("hidden");
+        confettiOverlay.innerHTML = "";
+    }, 4500);
 }
