@@ -1325,11 +1325,21 @@ async function loadStageContent() {
             } else {
                 const errorData = await response.json().catch(() => ({}));
                 const errorMessage = errorData.error?.message || `HTTP ${response.status}`;
-                tabContentTheory.innerHTML = stage.theory + `<p style="color:var(--danger)"><strong>No se pudo cargar Gemini:</strong> ${errorMessage}</p>`;
+                tabContentTheory.innerHTML = stage.theory + `
+                    <div class="card" style="border-color:var(--warning); margin-top:1rem;">
+                        <p style="color:var(--warning)"><strong>Gemini está temporalmente ocupado.</strong> ${errorMessage}</p>
+                        <button class="btn btn-secondary btn-sm" style="margin-top:0.75rem;" onclick="loadStageContent()">Reintentar</button>
+                    </div>
+                `;
             }
         } catch(e) {
             console.error("Error al cargar teoría extendida:", e);
-            tabContentTheory.innerHTML = stage.theory + `<p style="color:var(--danger)"><strong>Error de conexión con Gemini:</strong> ${e.message}</p>`;
+            tabContentTheory.innerHTML = stage.theory + `
+                <div class="card" style="border-color:var(--warning); margin-top:1rem;">
+                    <p style="color:var(--warning)"><strong>No se pudo completar la consulta.</strong> ${e.message}</p>
+                    <button class="btn btn-secondary btn-sm" style="margin-top:0.75rem;" onclick="loadStageContent()">Reintentar</button>
+                </div>
+            `;
         }
     }
 
