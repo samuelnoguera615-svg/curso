@@ -2616,7 +2616,7 @@ body {
 /*  MODO EXAMEN PANTALLA COMPLETA - MEJORADO          */
 /* ================================================== */
 
-/* En modo examen: OCULTAR absolutamente todo lo que NO es el examen */
+/* En modo examen: ocultar solo lo que no corresponde al examen */
 body.exam-mode .sidebar,
 body.exam-mode .main-header,
 body.exam-mode .lessons-sidebar,
@@ -2624,56 +2624,68 @@ body.exam-mode .lesson-footer {
     display: none !important;
 }
 
-/* Asegurar que el contenido principal ocupe toda la pantalla */
 body.exam-mode .main-content {
+    flex: 1 1 auto;
     min-height: 100vh;
-    padding: 0 !important;
-    overflow-y: auto;
     width: 100% !important;
+    padding: 0 !important;
+    overflow: visible;
 }
 
-body.exam-mode #lessons-view {
-    padding: 0 !important;
+body.exam-mode #lessons-view,
+body.exam-mode .content-section.active {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh;
     margin: 0 !important;
+    padding: 0 !important;
 }
 
 body.exam-mode .lessons-layout {
     display: block !important;
+    width: 100% !important;
+    min-height: 100vh;
     padding: 0 !important;
     margin: 0 !important;
     gap: 0 !important;
 }
 
 body.exam-mode .lesson-content-card.exam-mode-content {
+    display: flex !important;
+    width: 100% !important;
+    max-width: none !important;
     min-height: 100vh;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     background: linear-gradient(180deg, rgba(15, 17, 26, 0.98) 0%, rgba(8, 9, 13, 0.98) 100%) !important;
     backdrop-filter: blur(20px);
-    padding: clamp(1rem, 4vw, 3rem) !important;
+    padding: clamp(1rem, 3vw, 2.5rem) !important;
     margin: 0 !important;
+    overflow: visible;
 }
 
-/* CRÍTICO: En modo examen, OCULTAR todas las pestañas que NO sean examen (teoría, ejemplos, sandbox, quiz) */
 body.exam-mode .tab-content:not(#tab-content-exam) {
     display: none !important;
 }
 
-body.exam-mode #tab-content-exam {
+body.exam-mode #tab-content-exam,
+body.exam-mode #tab-content-exam.active {
     display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: calc(100vh - 2rem);
 }
 
 body.exam-mode .exam-sheet {
-    width: 100%;
+    width: min(100%, 1200px);
     max-width: 1200px;
     margin: 0 auto;
 }
 
-body.exam-mode #main-layout {
-    display: block !important;
-}
-
+body.exam-mode #main-layout,
 body.exam-mode .layout {
     display: block !important;
+    width: 100% !important;
+    min-height: 100vh;
 }
