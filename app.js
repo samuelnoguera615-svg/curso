@@ -290,16 +290,29 @@ test();`;
     
     // Determinación de keywords y elementos según categoría y concepto
     let targetTag = "div";
+    let htmlDocumentExam = false;
     if (category === "html" || category === "html_css_conjunto") {
         const lower = concept.toLowerCase();
-        if (lower.includes("encabezado")) targetTag = "h1";
+        if (lower.includes("estructura básica") || lower.includes("estructura basica")) {
+            targetTag = "html";
+            htmlDocumentExam = true;
+        } else if (lower.includes("estructura del documento")) targetTag = "body";
+        else if (lower.includes("encabezado")) targetTag = "h1";
         else if (lower.includes("párrafo") || lower.includes("parrafo")) targetTag = "p";
+        else if (lower.includes("negrita")) targetTag = "strong";
+        else if (lower.includes("itálica") || lower.includes("italica")) targetTag = "em";
+        else if (lower.includes("cita")) targetTag = "blockquote";
+        else if (lower.includes("preformateado") || lower.includes("código") || lower.includes("codigo")) targetTag = "pre";
         else if (lower.includes("desordenada")) targetTag = "ul";
         else if (lower.includes("ordenada")) targetTag = "ol";
+        else if (lower.includes("descripción") || lower.includes("descripcion")) targetTag = "dl";
         else if (lower.includes("enlace") || lower.includes("hipervínculo") || lower.includes("ancla")) targetTag = "a";
-        else if (lower.includes("imagen")) targetTag = "img";
+        else if (lower.includes("imagen") || lower.includes("texto alternativo") || lower.includes("tamaños de imágenes")) targetTag = "img";
         else if (lower.includes("tabla")) targetTag = "table";
         else if (lower.includes("formulario")) targetTag = "form";
+        else if (lower.includes("input") || lower.includes("password") || lower.includes("email") || lower.includes("checkbox") || lower.includes("radio")) targetTag = "input";
+        else if (lower.includes("label")) targetTag = "label";
+        else if (lower.includes("botón") || lower.includes("boton")) targetTag = "button";
         else if (lower.includes("textarea")) targetTag = "textarea";
         else if (lower.includes("select") || lower.includes("desplegable")) targetTag = "select";
         else if (lower.includes("audio")) targetTag = "audio";
@@ -343,25 +356,47 @@ test();`;
         p1Q2Correct = 0;
         p1Q2Explanation = `La comparación estricta y el manejo de tipos previenen fallos lógicos sutiles.`;
     } else if (category === "html") {
-        p1Q1 = `En HTML5, ¿qué estándar semántico se debe respetar al implementar '${concept}' (${depth})?`;
-        p1Q1Options = [
-            `Usar etiquetas estructurales semánticas (como <${targetTag}>) con su correspondiente cierre o atributos válidos.`,
-            `Escribir todo el documento dentro de una sola etiqueta <script>.`,
-            `Reemplazar el texto legible con imágenes estáticas para evitar el parseo del DOM.`,
-            `Eliminar el <!DOCTYPE html> y omitir la jerarquía del body.`
-        ];
-        p1Q1Correct = 0;
-        p1Q1Explanation = `HTML5 exige semántica clara para accesibilidad y correcto renderizado del DOM.`;
+        if (htmlDocumentExam) {
+            p1Q1 = `¿Qué declaración debe aparecer al inicio de un documento HTML5 para activar el modo estándar?`;
+            p1Q1Options = [
+                `Usar &lt;!DOCTYPE html&gt; antes del elemento &lt;html&gt;.`,
+                `Escribir todo el documento dentro de una etiqueta &lt;script&gt;.`,
+                `Eliminar el DOCTYPE para que el navegador detecte automáticamente la versión.`,
+                `Colocar la declaración dentro del elemento &lt;body&gt;.`
+            ];
+            p1Q1Correct = 0;
+            p1Q1Explanation = `&lt;!DOCTYPE html&gt; indica al navegador que debe interpretar el documento con el estándar HTML5.`;
 
-        p1Q2 = `¿Qué atributo o consideración técnica es clave al manipular '${concept}' en el navegador?`;
-        p1Q2Options = [
-            `Incluir identificadores o clases descriptivas para accesibilidad (ARIA) y vinculación con estilos/scripts.`,
-            `Nunca utilizar atributos en las etiquetas HTML.`,
-            `Escribir los nombres de las etiquetas en mayúsculas arbitrarias sin respetar el estándar.`,
-            `Anidar etiquetas sin cerrarlas adecuadamente.`
-        ];
-        p1Q2Correct = 0;
-        p1Q2Explanation = `Los atributos bien estructurados permiten enlazar estilos, interactividad y soporte de accesibilidad.`;
+            p1Q2 = `¿Qué estructura mínima organiza correctamente un documento HTML5?`;
+            p1Q2Options = [
+                `Un elemento &lt;html&gt; que contiene &lt;head&gt; y &lt;body&gt;.`,
+                `Un elemento &lt;body&gt; colocado fuera de cualquier documento HTML.`,
+                `Varias etiquetas &lt;html&gt; sin elementos &lt;head&gt; ni &lt;body&gt;.`,
+                `Un único elemento &lt;div&gt; sin declaración ni estructura raíz.`
+            ];
+            p1Q2Correct = 0;
+            p1Q2Explanation = `La estructura estándar contiene un elemento raíz &lt;html&gt; con las secciones &lt;head&gt; y &lt;body&gt;.`;
+        } else {
+            p1Q1 = `En HTML5, ¿qué estándar semántico se debe respetar al implementar '${concept}' (${depth})?`;
+            p1Q1Options = [
+                `Usar etiquetas estructurales semánticas (como &lt;${targetTag}&gt;) con su correspondiente cierre o atributos válidos.`,
+                `Escribir todo el documento dentro de una sola etiqueta &lt;script&gt;.`,
+                `Reemplazar el texto legible con imágenes estáticas para evitar el parseo del DOM.`,
+                `Eliminar el &lt;!DOCTYPE html&gt; y omitir la jerarquía del body.`
+            ];
+            p1Q1Correct = 0;
+            p1Q1Explanation = `HTML5 exige semántica clara para accesibilidad y correcto renderizado del DOM.`;
+
+            p1Q2 = `¿Qué atributo o consideración técnica es clave al manipular '${concept}' en el navegador?`;
+            p1Q2Options = [
+                `Incluir identificadores o clases descriptivas para accesibilidad (ARIA) y vinculación con estilos/scripts.`,
+                `Nunca utilizar atributos en las etiquetas HTML.`,
+                `Escribir los nombres de las etiquetas en mayúsculas arbitrarias sin respetar el estándar.`,
+                `Anidar etiquetas sin cerrarlas adecuadamente.`
+            ];
+            p1Q2Correct = 0;
+            p1Q2Explanation = `Los atributos bien estructurados permiten enlazar estilos, interactividad y soporte de accesibilidad.`;
+        }
     } else if (category === "css") {
         p1Q1 = `Al diseñar reglas de estilo para '${concept}' (${depth}), ¿qué principio de especificidad es correcto?`;
         p1Q1Options = [
@@ -488,10 +523,17 @@ test();`;
         p2ItemB_Placeholder = "Ej: ===";
         p2ItemB_Explanation = "El operador '===' comprueba tanto la igualdad de valor como la concordancia de tipo de dato.";
     } else if (category === "html" || category === "html_css_conjunto") {
-        p2ItemA_Prompt = `Pregunta A: Escribe el nombre de la etiqueta HTML semántica para <strong>${concept}</strong> (sin signos &lt;&gt;):`;
-        p2ItemA_Expected = [targetTag, `<${targetTag}>`, `${targetTag}>`, `<${targetTag}`];
-        p2ItemA_Placeholder = `Ej: ${targetTag}`;
-        p2ItemA_Explanation = `La etiqueta estándar correspondiente es <${targetTag}>.`;
+        if (htmlDocumentExam) {
+            p2ItemA_Prompt = `Pregunta A: Escribe la declaración que indica al navegador que el documento usa HTML5:`;
+            p2ItemA_Expected = ["<!doctype html>", "doctype html", "doctype"];
+            p2ItemA_Placeholder = "Ej: <!DOCTYPE html>";
+            p2ItemA_Explanation = "La declaración <!DOCTYPE html> activa el modo estándar de HTML5.";
+        } else {
+            p2ItemA_Prompt = `Pregunta A: Escribe el nombre de la etiqueta HTML para <strong>${concept}</strong> (sin signos &lt;&gt;):`;
+            p2ItemA_Expected = [targetTag, `<${targetTag}>`, `${targetTag}>`, `<${targetTag}`];
+            p2ItemA_Placeholder = `Ej: ${targetTag}`;
+            p2ItemA_Explanation = `La etiqueta estándar correspondiente es &lt;${targetTag}&gt;.`;
+        }
 
         p2ItemB_Prompt = `Pregunta B: Escribe el nombre de la etiqueta raíz que envuelve el contenido visible de una página web (sin signos):`;
         p2ItemB_Expected = ["body", "<body>", "html", "<html>", "main", "<main>"];
@@ -561,10 +603,21 @@ test();`;
     let p3Validate = null;
 
     if (category === "html" || category === "html_css_conjunto") {
-        p3Instructions = `<p>Desarrolla o completa la estructura HTML para que contenga correctamente al menos una etiqueta <code>&lt;${targetTag}&gt;</code> con texto descriptivo.</p>`;
-        p3Initial = `<!-- Examen Práctico: Escribe tu código HTML -->\n<${targetTag}>Evaluación de ${concept}</${targetTag}>\n`;
+        p3Instructions = htmlDocumentExam
+            ? `<p>Desarrolla o completa un documento HTML5 válido que incluya <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;head&gt;</code> y <code>&lt;body&gt;</code> con contenido descriptivo.</p>`
+            : `<p>Desarrolla o completa la estructura HTML para que contenga correctamente al menos una etiqueta <code>&lt;${targetTag}&gt;</code> con texto descriptivo.</p>`;
+        p3Initial = htmlDocumentExam
+            ? `<!DOCTYPE html>\n<html lang="es">\n<head>\n    <meta charset="UTF-8">\n    <title>Evaluación HTML5</title>\n</head>\n<body>\n    <h1>Estructura básica HTML5</h1>\n</body>\n</html>\n`
+            : `<!-- Examen Práctico: Escribe tu código HTML -->\n<${targetTag}>Evaluación de ${concept}</${targetTag}>\n`;
         p3Validate = function(code) {
             const doc = new DOMParser().parseFromString(code, 'text/html');
+            if (htmlDocumentExam) {
+                const hasDoctype = /^\s*<!doctype\s+html\s*>/i.test(code);
+                if (!hasDoctype || !doc.querySelector('head') || !doc.querySelector('body')) {
+                    return { success: false, msg: "El documento debe incluir <!DOCTYPE html>, <head> y <body>." };
+                }
+                return { success: true, msg: "Documento HTML5 validado con DOCTYPE, head y body." };
+            }
             const el = doc.querySelector(targetTag);
             if (!el) return { success: false, msg: `Falta incluir el elemento <${targetTag}> en el código.` };
             return { success: true, msg: `Elemento <${targetTag}> detectado y validado en el DOM.` };
@@ -778,7 +831,7 @@ function generateCourseData() {
         "Python Expresiones Regulares", "Python Requests HTTP", "Python JSON con json", "Python Proyecto Completo"
     ];
 
-    // 7. C y C++ (1301 to 1600) -> 300 stages
+    // 7. C y C++ (1301 to 1600) -> 300 stages 
     const cCppConcepts = [
         "C Instalación Compilador GCC", "C Hola Mundo", "C Variables y Tipos Primitivos", "C int float char double",
         "C Printf y Scanf", "C Operadores Aritméticos", "C Operadores Lógicos", "C If Else Switch",
@@ -881,7 +934,7 @@ let userState = {
     activeView: "welcome-screen"
 };
 
-// Desbloquear el INICIO de cada categoría (entrada libre)
+// La primera etapa de cada lenguaje está disponible para elegir una ruta.
 CATEGORY_START_INDEXES.forEach(i => { userState.unlockedStages[i] = true; });
 
 // --- CONFIGURACIÓN DE NIVELES ---
@@ -984,8 +1037,6 @@ function upgradeUserState(loaded) {
     const grades = new Array(size).fill(null);
     const attempts = new Array(size).fill(0);
     const unlocked = new Array(size).fill(false);
-    
-    // Desbloquear siempre el INICIO de cada categoría (entrada libre)
     CATEGORY_START_INDEXES.forEach(i => { unlocked[i] = true; });
     
     if (loaded.completedStages) {
@@ -993,7 +1044,6 @@ function upgradeUserState(loaded) {
             completed[i] = loaded.completedStages[i];
             grades[i] = loaded.stageGrades ? loaded.stageGrades[i] : null;
             attempts[i] = loaded.stageAttempts ? loaded.stageAttempts[i] : 0;
-            unlocked[i] = loaded.unlockedStages ? (unlocked[i] || loaded.unlockedStages[i]) : unlocked[i];
         }
     }
     
@@ -1002,15 +1052,14 @@ function upgradeUserState(loaded) {
     loaded.stageAttempts = attempts;
     loaded.unlockedStages = unlocked;
     
-    // Desbloqueo consecutivo: si se aprobó una etapa, se abre la siguiente
-    for (let i = 0; i < size - 1; i++) {
-        if (completed[i]) {
-            loaded.unlockedStages[i + 1] = true;
+    // Cada lenguaje avanza por su propia cadena continua de etapas aprobadas.
+    CATEGORIES.forEach(category => {
+        for (let i = category.range[0]; i < category.range[1]; i++) {
+            if (unlocked[i] && completed[i]) {
+                loaded.unlockedStages[i + 1] = true;
+            }
         }
-    }
-    
-    // Refuerzo final: por si acaso, asegurar inicios de categoría desbloqueados
-    CATEGORY_START_INDEXES.forEach(i => { loaded.unlockedStages[i] = true; });
+    });
     
     return loaded;
 }
@@ -1148,7 +1197,7 @@ function setupEventListeners() {
                 unlockedStages: new Array(1600).fill(false),
                 activeView: "welcome-screen"
             };
-            userState.unlockedStages[0] = true;
+            CATEGORY_START_INDEXES.forEach(i => { userState.unlockedStages[i] = true; });
             isShowingMegaExam = false;
             openCategories.clear();
             showToast("Datos borrados. Iniciando de nuevo.", "info");
@@ -1173,14 +1222,6 @@ function setupEventListeners() {
         const isCompleted = userState.completedStages[userState.currentStageIndex];
         if (!isCompleted) {
             showToast("⚠️ Primero debes aprobar el examen de esta etapa para avanzar.", "warning");
-            return;
-        }
-
-        const isCheckpoint = (userState.currentStageIndex + 1) % 100 === 0 && !userState.unlockedStages[userState.currentStageIndex + 1];
-        
-        if (isCheckpoint && !isShowingMegaExam) {
-            isShowingMegaExam = true;
-            setupMegaExam();
             return;
         }
 
