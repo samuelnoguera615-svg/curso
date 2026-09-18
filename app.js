@@ -71,14 +71,14 @@ function compileProceduralStage(index, category, concept, depth, difficulty, tit
         theory += `
             <p>La lógica es la base de todo software. Los computadores son secuenciales: leen instrucciones ordenadas y toman decisiones binarias. Al aprender '${concept}', entrenas tu mente para estructurar soluciones paso a paso.</p>
             <div class="info-note">
-                <strong>💡 Tip Pedagógico:</strong> Piensa siempre en las tres fases del software: Entrada de datos, Procesamiento y Salida del resultado.
+                <strong>Tip Pedagógico:</strong> Piensa siempre en las tres fases del software: Entrada de datos, Procesamiento y Salida del resultado.
             </div>
         `;
     } else if (category === "html") {
         theory += `
             <p>HTML5 provee la estructura y significado del contenido web. Mediante etiquetas estructuradas como <code>&lt;${concept.toLowerCase().replace(/\s+/g, '')}&gt;</code>, los buscadores y navegadores interpretan de qué trata tu página.</p>
             <div class="info-note">
-                <strong>💡 Buenas Prácticas:</strong> Siempre cierra tus etiquetas y mantén la semántica para mejorar el SEO y la accesibilidad.
+                <strong>Buenas Prácticas:</strong> Siempre cierra tus etiquetas y mantén la semántica para mejorar el SEO y la accesibilidad.
             </div>
         `;
     } else if (category === "css") {
@@ -97,7 +97,7 @@ selector {
         theory += `
             <p>Python es el lenguaje versátil por excelencia: se usa en automatización, ciencia de datos, inteligencia artificial, backend web y scripting. Su sintaxis limpia con indentación obligatoria fomenta código legible.</p>
             <div class="info-note">
-                <strong>🐍 Zen de Python:</strong> "Lo simple es mejor que lo complejo. Si la implementación es difícil de explicar, es una mala idea."
+                <strong>Zen de Python:</strong> "Lo simple es mejor que lo complejo. Si la implementación es difícil de explicar, es una mala idea."
             </div>
             <pre><code># Hola mundo en Python
 print("Hola, Codex Academy!")</code></pre>
@@ -106,7 +106,7 @@ print("Hola, Codex Academy!")</code></pre>
         theory += `
             <p>C y C++ son lenguajes compilados de bajo nivel que permiten control directo sobre la memoria y el hardware. Son la base de sistemas operativos, motores de juego (Unreal), navegadores y software de alto rendimiento.</p>
             <div class="info-note">
-                <strong>⚙️ Dato Clave:</strong> C es procedural, C++ añade Programación Orientada a Objetos, plantillas (templates) y la STL (Standard Template Library).
+                <strong>Dato Clave:</strong> C es procedural, C++ añade Programación Orientada a Objetos, plantillas (templates) y la STL (Standard Template Library).
             </div>
             <pre><code>// Hola mundo en C
 #include &lt;stdio.h&gt;
@@ -1071,7 +1071,7 @@ function setupTabNavigation() {
         tab.addEventListener("click", (e) => {
             e.preventDefault();
             if (isShowingMegaExam) {
-                showToast("⚠️ Debes completar el Examen Total de la Sección primero.", "warning");
+                showToast("Debes completar el Examen Total de la Sección primero.", "warning");
                 return;
             }
             const tabName = tab.getAttribute("data-tab");
@@ -1082,7 +1082,7 @@ function setupTabNavigation() {
 
 function switchTab(tabName) {
     if (document.body.classList.contains("exam-mode") && tabName !== "exam") {
-        showToast("⚠️ Debes entregar el examen antes de volver al contenido.", "warning");
+        showToast("Debes entregar el examen antes de volver al contenido.", "warning");
         return;
     }
 
@@ -1148,7 +1148,7 @@ function setupEventListeners() {
             userState.name = name;
             userState.activeView = "dashboard";
             addXp(20); // Regalo de inicio
-            showToast("🚀 ¡Bienvenido a Codex Academy! +20 XP obtenido.", "success");
+            showToast("¡Bienvenido a Codex Academy! +20 XP obtenido.", "success");
             saveProgress();
             applyState();
         }
@@ -1159,7 +1159,7 @@ function setupEventListeners() {
         item.addEventListener("click", (e) => {
             e.preventDefault();
             if (item.classList.contains("disabled")) {
-                showToast("🔒 Esta sección está bloqueada hasta completar el curso.", "warning");
+                showToast("Esta sección está bloqueada hasta completar el curso.", "warning");
                 return;
             }
             const target = item.getAttribute("data-target");
@@ -1183,7 +1183,7 @@ function setupEventListeners() {
 
     // Reiniciar Progreso
     btnResetData.addEventListener("click", () => {
-        if (confirm("⚠️ ¿Estás seguro de que deseas borrar todo tu progreso, notas y XP de las 1600 etapas? Esta acción no se puede deshacer.")) {
+        if (confirm("¿Estás seguro de que deseas borrar todo tu progreso, notas y XP de las 1600 etapas? Esta acción no se puede deshacer.")) {
             localStorage.removeItem("codex_academy_user");
             userState = {
                 name: "",
@@ -1221,7 +1221,7 @@ function setupEventListeners() {
     btnNextLesson.addEventListener("click", () => {
         const isCompleted = userState.completedStages[userState.currentStageIndex];
         if (!isCompleted) {
-            showToast("⚠️ Primero debes aprobar el examen de esta etapa para avanzar.", "warning");
+            showToast("Primero debes aprobar el examen de esta etapa para avanzar.", "warning");
             return;
         }
 
@@ -1231,7 +1231,7 @@ function setupEventListeners() {
             saveProgress();
             switchView("lessons-view");
         } else {
-            showToast("🎉 ¡Felicidades! Has completado las 1600 etapas del curso.", "success");
+            showToast("¡Felicidades! Has completado las 1600 etapas del curso.", "success");
             switchView("dashboard");
         }
     });
@@ -1254,7 +1254,7 @@ function setupEventListeners() {
             const key = geminiKeyInput.value.trim();
             if (key) {
                 localStorage.setItem("gemini_api_key", key);
-                showToast("🔑 Llave API de Gemini guardada exitosamente.", "success");
+                showToast("Llave API de Gemini guardada exitosamente.", "success");
                 if (toggleAiContent) {
                     toggleAiContent.checked = true;
                     loadStageContent();
@@ -1264,7 +1264,7 @@ function setupEventListeners() {
                 if (toggleAiContent) {
                     toggleAiContent.checked = false;
                 }
-                showToast("🔑 Llave API eliminada.", "info");
+                showToast("Llave API eliminada.", "info");
             }
         });
     }
@@ -1409,7 +1409,7 @@ function addXp(amount) {
 }
 
 function triggerLevelUpEffects() {
-    showToast(`✨ ¡NIVEL UP! Has alcanzado el Nivel ${userState.level} ✨`, "success");
+    showToast(`¡NIVEL UP! Has alcanzado el Nivel ${userState.level}`, "success");
     triggerConfetti();
 }
 
@@ -1490,9 +1490,9 @@ function renderDashboard() {
             card.className = `stage-card card ${isLocked ? 'locked' : ''}`;
 
             let badgeHtml = "";
-            if (isLocked) badgeHtml = `<span class="stage-badge locked-badge">🔒 Bloqueado</span>`;
-            else if (isCompleted) badgeHtml = `<span class="stage-badge completed-badge">✓ Aprobado (${userState.stageGrades[globalIdx]}%)</span>`;
-            else badgeHtml = `<span class="stage-badge active-badge">⚡ En Curso</span>`;
+            if (isLocked) badgeHtml = `<span class="stage-badge locked-badge">Bloqueado</span>`;
+            else if (isCompleted) badgeHtml = `<span class="stage-badge completed-badge">Aprobado (${userState.stageGrades[globalIdx]}%)</span>`;
+            else badgeHtml = `<span class="stage-badge active-badge">En Curso</span>`;
 
             let actionButtonHtml = "";
             if (isLocked) {
@@ -1577,19 +1577,19 @@ async function loadStageContent() {
     // Menú de pestañas
     lessonsMenu.innerHTML = `
         <a href="#" class="lesson-menu-item active" data-tab="theory">
-            <span>📚 1. Teoría</span>
+            <span>1. Teoría</span>
         </a>
         <a href="#" class="lesson-menu-item" data-tab="examples">
-            <span>💡 2. Ejemplos</span>
+            <span>2. Ejemplos</span>
         </a>
         <a href="#" class="lesson-menu-item" data-tab="sandbox">
-            <span>🧪 3. Práctica Sandbox</span>
+            <span>3. Práctica Sandbox</span>
         </a>
         <a href="#" class="lesson-menu-item" data-tab="quiz">
-            <span>📝 4. Quiz de Etapa</span>
+            <span>4. Quiz de Etapa</span>
         </a>
         <a href="#" class="lesson-menu-item" data-tab="exam">
-            <strong style="color: var(--accent-light)">🏁 5. Examen Final</strong>
+            <strong style="color: var(--accent-light)">5. Examen Final</strong>
         </a>
     `;
     setupTabNavigation();
@@ -1634,7 +1634,7 @@ async function loadStageContent() {
                     tabContentTheory.innerHTML = `
                         ${stage.theory}
                         <div class="ai-extra-box card" style="border: 1px dashed var(--accent); background: rgba(139, 92, 246, 0.03); padding: 1.5rem; margin-top: 2rem;">
-                            <h3 style="color:var(--accent-light); margin-top:0;">🤖 Teoría Extra Generada por IA</h3>
+                            <h3 style="color:var(--accent-light); margin-top:0;">Teoría Extra Generada por IA</h3>
                             ${aiText}
                         </div>
                     `;
@@ -1717,26 +1717,26 @@ function renderStageQuiz() {
     document.getElementById("btn-quiz-check").addEventListener("click", () => {
         const feedback = document.getElementById("quiz-feedback-box");
         if (currentQuizSelectedAnswer === null) {
-            showToast("⚠️ Selecciona una respuesta primero.", "warning");
+            showToast("Selecciona una respuesta primero.", "warning");
             return;
         }
 
         if (currentQuizSelectedAnswer === quiz.correct) {
             feedback.innerHTML = `
                 <div class="card" style="border: 1px solid var(--success); background: rgba(16, 185, 129, 0.05); padding: 1rem;">
-                    <strong style="color: var(--success);">✓ ¡Correcto!</strong>
+                    <strong style="color: var(--success);">¡Correcto!</strong>
                     <p style="margin-top: 0.5rem; font-size: 0.9rem;">${quiz.explanation}</p>
                 </div>
             `;
-            showToast("✓ Respuesta correcta.", "success");
+            showToast("Respuesta correcta.", "success");
         } else {
             feedback.innerHTML = `
                 <div class="card" style="border: 1px solid var(--danger); background: rgba(244, 63, 94, 0.05); padding: 1rem;">
-                    <strong style="color: var(--danger);">✗ Respuesta Incorrecta</strong>
+                    <strong style="color: var(--danger);">Respuesta Incorrecta</strong>
                     <p style="margin-top: 0.5rem; font-size: 0.9rem;">Revisa la teoría del módulo y vuelve a intentarlo.</p>
                 </div>
             `;
-            showToast("✗ Inténtalo de nuevo.", "danger");
+            showToast("Inténtalo de nuevo.", "danger");
         }
     });
 }
@@ -1780,7 +1780,7 @@ function renderStageExam() {
             
             <div class="exam-sheet-header">
                 <div>
-                    <span class="exam-sheet-badge">📋 Hoja Oficial de Evaluación</span>
+                    <span class="exam-sheet-badge">Hoja Oficial de Evaluación</span>
                     <h2 class="exam-sheet-title">${exam.title}</h2>
                     <div class="exam-sheet-meta-grid">
                         <span class="exam-sheet-meta-item">Código: <strong>${exam.examCode}</strong></span>
@@ -1794,7 +1794,7 @@ function renderStageExam() {
             <!-- PARTE I: ANÁLISIS TEÓRICO Y DETECCIÓN -->
             <div class="exam-section-card" id="exam-card-part1">
                 <div class="exam-section-header">
-                    <span class="exam-section-title">🔍 ${exam.part1.title}</span>
+                    <span class="exam-section-title">${exam.part1.title}</span>
                     <span class="exam-section-weight">30 Pts</span>
                 </div>
                 
@@ -1818,7 +1818,7 @@ function renderStageExam() {
             <!-- PARTE II: COMPLETACIÓN TÉCNICA Y SINTAXIS -->
             <div class="exam-section-card" id="exam-card-part2">
                 <div class="exam-section-header">
-                    <span class="exam-section-title">✏️ ${exam.part2.title}</span>
+                    <span class="exam-section-title">${exam.part2.title}</span>
                     <span class="exam-section-weight">30 Pts</span>
                 </div>
 
@@ -1853,14 +1853,14 @@ function renderStageExam() {
             <!-- PARTE III: RETO PRÁCTICO Y LABORATORIO DE CÓDIGO -->
             <div class="exam-section-card" id="exam-card-part3">
                 <div class="exam-section-header">
-                    <span class="exam-section-title">💻 ${exam.part3.title}</span>
+                    <span class="exam-section-title">${exam.part3.title}</span>
                     <span class="exam-section-weight">${exam.part3.weight} Pts</span>
                 </div>
                 <div class="exam-prompt">${exam.part3.instructions}</div>
                 
                 <div class="challenge-editor-panel" style="height: 380px; margin-top: 1rem;">
                     <div class="editor-header">
-                        <span class="editor-filename">📁 ${exam.part3.filename}</span>
+                        <span class="editor-filename">${exam.part3.filename}</span>
                         <span class="editor-lang badge">${exam.part3.language.toUpperCase()}</span>
                     </div>
                     
@@ -1891,10 +1891,10 @@ function renderStageExam() {
             <div class="exam-summary-banner">
                 <div style="display:flex; justify-content:center; gap: 1rem; flex-wrap:wrap;">
                     <button id="btn-exam-ai" class="btn btn-outline">
-                        <span>🤖 Tutor de Examen (Pistas)</span>
+                        <span>Tutor de Examen (Pistas)</span>
                     </button>
                     <button id="btn-submit-exam-sheet" class="btn btn-primary btn-glow">
-                        <span>📝 Entregar y Calificar Hoja de Examen</span>
+                        <span>Entregar y Calificar Hoja de Examen</span>
                     </button>
                 </div>
                 <div id="exam-overall-result" style="margin-top: 1.5rem;"></div>
@@ -1984,20 +1984,20 @@ function renderStageExam() {
         const p1q1Fb = document.getElementById("p1-q1-feedback");
         if (selectedP1Q1 === exam.part1.q1.correct) {
             earnedP1Q1 = exam.part1.q1.weight;
-            p1q1Fb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP1Q1} pts): ${exam.part1.q1.explanation}</div>`;
+            p1q1Fb.innerHTML = `<div class="exam-feedback-item correct">Correcto (+${earnedP1Q1} pts): ${exam.part1.q1.explanation}</div>`;
         } else {
             earnedP1Q1 = 0;
-            p1q1Fb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part1.q1.weight} pts): ${selectedP1Q1 === null ? 'No seleccionaste ninguna opción.' : 'La opción elegida no es la correcta.'}</div>`;
+            p1q1Fb.innerHTML = `<div class="exam-feedback-item incorrect">Incorrecto (0/${exam.part1.q1.weight} pts): ${selectedP1Q1 === null ? 'No seleccionaste ninguna opción.' : 'La opción elegida no es la correcta.'}</div>`;
         }
 
         // Validar Parte 1 - Q2
         const p1q2Fb = document.getElementById("p1-q2-feedback");
         if (selectedP1Q2 === exam.part1.q2.correct) {
             earnedP1Q2 = exam.part1.q2.weight;
-            p1q2Fb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP1Q2} pts): ${exam.part1.q2.explanation}</div>`;
+            p1q2Fb.innerHTML = `<div class="exam-feedback-item correct">Correcto (+${earnedP1Q2} pts): ${exam.part1.q2.explanation}</div>`;
         } else {
             earnedP1Q2 = 0;
-            p1q2Fb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part1.q2.weight} pts): ${selectedP1Q2 === null ? 'No seleccionaste ninguna opción.' : 'La opción elegida no es la correcta.'}</div>`;
+            p1q2Fb.innerHTML = `<div class="exam-feedback-item incorrect">Incorrecto (0/${exam.part1.q2.weight} pts): ${selectedP1Q2 === null ? 'No seleccionaste ninguna opción.' : 'La opción elegida no es la correcta.'}</div>`;
         }
 
         // Validar Parte 2 - Item A
@@ -2005,10 +2005,10 @@ function renderStageExam() {
         const isMatchA = exam.part2.itemA.expected.some(exp => itemAVal === exp.toLowerCase() || itemAVal.includes(exp.toLowerCase()));
         if (itemAVal.length > 0 && isMatchA) {
             earnedP2A = exam.part2.itemA.weight;
-            p2aFb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP2A} pts): ${exam.part2.itemA.explanation}</div>`;
+            p2aFb.innerHTML = `<div class="exam-feedback-item correct">Correcto (+${earnedP2A} pts): ${exam.part2.itemA.explanation}</div>`;
         } else {
             earnedP2A = 0;
-            p2aFb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part2.itemA.weight} pts): ${itemAVal.length === 0 ? 'Campo vacío.' : 'Término incorrecto.'} Pista: ${exam.part2.itemA.explanation}</div>`;
+            p2aFb.innerHTML = `<div class="exam-feedback-item incorrect">Incorrecto (0/${exam.part2.itemA.weight} pts): ${itemAVal.length === 0 ? 'Campo vacío.' : 'Término incorrecto.'} Pista: ${exam.part2.itemA.explanation}</div>`;
         }
 
         // Validar Parte 2 - Item B
@@ -2016,19 +2016,19 @@ function renderStageExam() {
         const isMatchB = exam.part2.itemB.expected.some(exp => itemBVal === exp.toLowerCase() || itemBVal.includes(exp.toLowerCase()));
         if (itemBVal.length > 0 && isMatchB) {
             earnedP2B = exam.part2.itemB.weight;
-            p2bFb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP2B} pts): ${exam.part2.itemB.explanation}</div>`;
+            p2bFb.innerHTML = `<div class="exam-feedback-item correct">Correcto (+${earnedP2B} pts): ${exam.part2.itemB.explanation}</div>`;
         } else {
             earnedP2B = 0;
-            p2bFb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part2.itemB.weight} pts): ${itemBVal.length === 0 ? 'Campo vacío.' : 'Término incorrecto.'} Pista: ${exam.part2.itemB.explanation}</div>`;
+            p2bFb.innerHTML = `<div class="exam-feedback-item incorrect">Incorrecto (0/${exam.part2.itemB.weight} pts): ${itemBVal.length === 0 ? 'Campo vacío.' : 'Término incorrecto.'} Pista: ${exam.part2.itemB.explanation}</div>`;
         }
 
         // Validar Parte 2 - Verdadero o Falso
         const trueFalseFb = document.getElementById("p2-true-false-feedback");
         if (selectedP2TrueFalse === exam.part2.trueFalse.correct) {
             earnedP2TrueFalse = exam.part2.trueFalse.weight;
-            trueFalseFb.innerHTML = `<div class="exam-feedback-item correct">✓ Correcto (+${earnedP2TrueFalse} pts): ${exam.part2.trueFalse.explanation}</div>`;
+            trueFalseFb.innerHTML = `<div class="exam-feedback-item correct">Correcto (+${earnedP2TrueFalse} pts): ${exam.part2.trueFalse.explanation}</div>`;
         } else {
-            trueFalseFb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Incorrecto (0/${exam.part2.trueFalse.weight} pts): ${selectedP2TrueFalse === null ? 'No seleccionaste ninguna opción.' : 'La respuesta elegida no es correcta.'}</div>`;
+            trueFalseFb.innerHTML = `<div class="exam-feedback-item incorrect">Incorrecto (0/${exam.part2.trueFalse.weight} pts): ${selectedP2TrueFalse === null ? 'No seleccionaste ninguna opción.' : 'La respuesta elegida no es correcta.'}</div>`;
         }
 
         // Validar Parte 3 - Código
@@ -2036,12 +2036,12 @@ function renderStageExam() {
         const p3Result = exam.part3.validate(p3Code);
         if (p3Result.success) {
             earnedP3 = exam.part3.weight;
-            p3Console.innerHTML = `<div class="console-line success">✓ ${p3Result.msg}</div>`;
-            p3Fb.innerHTML = `<div class="exam-feedback-item correct">✓ Laboratorio Aprobado (+${earnedP3} pts): Pruebas automáticas superadas con éxito.</div>`;
+            p3Console.innerHTML = `<div class="console-line success">${p3Result.msg}</div>`;
+            p3Fb.innerHTML = `<div class="exam-feedback-item correct">Laboratorio Aprobado (+${earnedP3} pts): Pruebas automáticas superadas con éxito.</div>`;
         } else {
             earnedP3 = 0;
-            p3Console.innerHTML = `<div class="console-line error">❌ ${p3Result.msg}</div>`;
-            p3Fb.innerHTML = `<div class="exam-feedback-item incorrect">✗ Laboratorio Incorrecto (0/${exam.part3.weight} pts): ${p3Result.msg}</div>`;
+            p3Console.innerHTML = `<div class="console-line error">${p3Result.msg}</div>`;
+            p3Fb.innerHTML = `<div class="exam-feedback-item incorrect">Laboratorio Incorrecto (0/${exam.part3.weight} pts): ${p3Result.msg}</div>`;
         }
 
         const totalScore = earnedP1Q1 + earnedP1Q2 + earnedP2A + earnedP2B + earnedP2TrueFalse + earnedP3;
@@ -2067,25 +2067,25 @@ function renderStageExam() {
 
             overallBox.innerHTML = `
                 <div class="card" style="border: 2px solid var(--success); background: rgba(16, 185, 129, 0.08); padding: 1.5rem; text-align:center;">
-                    <h3 style="color:#34d399; font-size:1.4rem; margin-bottom:0.5rem;">🎉 ¡EXAMEN OFICIAL APROBADO!</h3>
+                    <h3 style="color:#34d399; font-size:1.4rem; margin-bottom:0.5rem;">¡EXAMEN OFICIAL APROBADO!</h3>
                     <p style="font-size:1.1rem; font-weight:700;">Calificación Final: <span style="color:#34d399;">${totalScore} / 100 Pts (${totalScore}%)</span></p>
                     <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:0.5rem;">Desglose: Parte I (${earnedP1Q1 + earnedP1Q2} pts) • Parte II (${earnedP2A + earnedP2B + earnedP2TrueFalse} pts) • Parte III (${earnedP3} pts)</p>
                     <button class="btn btn-primary" style="margin-top:1.25rem;" onclick="document.getElementById('btn-next-lesson').click()">Avanzar a la Siguiente Etapa →</button>
                 </div>
             `;
-            showToast(`🎉 ¡Etapa aprobada con éxito! Nota: ${totalScore}% (+${stage.xpAward} XP)`, "success");
+            showToast(`¡Etapa aprobada con éxito! Nota: ${totalScore}% (+${stage.xpAward} XP)`, "success");
             triggerConfetti();
         } else {
             saveProgress();
             applyState();
             overallBox.innerHTML = `
                 <div class="card" style="border: 2px solid var(--danger); background: rgba(244, 63, 94, 0.08); padding: 1.5rem; text-align:center;">
-                    <h3 style="color:#f87171; font-size:1.3rem; margin-bottom:0.5rem;">❌ Evaluación No Aprobada</h3>
+                    <h3 style="color:#f87171; font-size:1.3rem; margin-bottom:0.5rem;">Evaluación No Aprobada</h3>
                     <p style="font-size:1.1rem; font-weight:700;">Puntaje Obtenido: <span style="color:#f87171;">${totalScore} / 100 Pts</span> (Se requiere mínimo 70%)</p>
                     <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:0.5rem;">Revisa las correcciones marcadas en rojo en cada sección, ajusta tus respuestas y vuelve a entregar la hoja.</p>
                 </div>
             `;
-            showToast(`❌ Calificación insuficiente (${totalScore}%). Revisa las correcciones marcadas.`, "danger");
+            showToast(`Calificación insuficiente (${totalScore}%). Revisa las correcciones marcadas.`, "danger");
         }
     });
 }
@@ -2103,11 +2103,11 @@ function renderMegaExamView() {
     const startStage = (currentCheckpoint - 1) * 100 + 1;
     const endStage = currentCheckpoint * 100;
     
-    lessonStageTitle.textContent = `🏆 Examen Integral de Sección: Etapas ${startStage} a ${endStage}`;
+    lessonStageTitle.textContent = `Examen Integral de Sección: Etapas ${startStage} a ${endStage}`;
     
     lessonsMenu.innerHTML = `
         <a href="#" class="lesson-menu-item active" data-tab="mega-exam">
-            <span>🏁 Examen Total de Certificación</span>
+            <span>Examen Total de Certificación</span>
         </a>
     `;
 
@@ -2150,7 +2150,7 @@ function renderMegaExamView() {
         <div class="exam-sheet" style="max-width: 800px;">
             <div class="exam-sheet-header">
                 <div>
-                    <span class="exam-sheet-badge">🏆 Gran Evaluación de Sección</span>
+                    <span class="exam-sheet-badge">Gran Evaluación de Sección</span>
                     <h2 class="exam-sheet-title">Examen Integral de 100 Etapas (Checkpoint ${currentCheckpoint})</h2>
                     <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">Pregunta ${activeMegaQuestionIdx + 1} de 10 • Se requiere 80% (8/10) para superar el checkpoint y desbloquear el siguiente bloque.</p>
                 </div>
@@ -2229,24 +2229,24 @@ function renderMegaExamView() {
 
                 resBox.innerHTML = `
                     <div class="card" style="border:2px solid var(--success); background:rgba(16,185,129,0.08); padding:1.5rem; text-align:center;">
-                        <h3 style="color:#34d399;">🎉 ¡CHECKPOINT SUPERADO CON ÉXITO!</h3>
+                        <h3 style="color:#34d399;">¡CHECKPOINT SUPERADO CON ÉXITO!</h3>
                         <p style="font-size:1.1rem; font-weight:700;">Nota Obtenida: ${percent}% (${correctCount}/10 correctas)</p>
                         <p style="color:var(--text-secondary); margin-top:0.5rem;">Has desbloqueado el siguiente gran bloque curricular. +500 XP otorgados.</p>
                         <button class="btn btn-primary" style="margin-top:1rem;" onclick="switchView('dashboard')">Regresar al Panel Principal</button>
                     </div>
                 `;
-                showToast(`🏆 ¡Checkpoint ${currentCheckpoint} Aprobado! (+500 XP)`, "success");
+                showToast(`¡Checkpoint ${currentCheckpoint} Aprobado! (+500 XP)`, "success");
                 triggerConfetti();
             } else {
                 resBox.innerHTML = `
                     <div class="card" style="border:2px solid var(--danger); background:rgba(244,63,94,0.08); padding:1.5rem; text-align:center;">
-                        <h3 style="color:#f87171;">❌ No alcanzaste el puntaje mínimo (80%)</h3>
+                        <h3 style="color:#f87171;">No alcanzaste el puntaje mínimo (80%)</h3>
                         <p style="font-size:1.1rem; font-weight:700;">Nota Obtenida: ${percent}% (${correctCount}/10 correctas)</p>
                         <p style="color:var(--text-secondary); margin-top:0.5rem;">Repasa los conceptos de las etapas previas y vuelve a presentar la prueba.</p>
                         <button class="btn btn-secondary" style="margin-top:1rem;" onclick="activeMegaQuestionIdx=0; currentMegaExamAnswers.fill(null); renderMegaExamView();">Reintentar Examen</button>
                     </div>
                 `;
-                showToast(`❌ Examen integral no aprobado (${percent}%).`, "danger");
+                showToast(`Examen integral no aprobado (${percent}%).`, "danger");
             }
         });
     }
@@ -2311,7 +2311,7 @@ async function consultarTutorIA(contexto, codigo, errorOutput) {
     if (!apiKey) {
         setTimeout(() => {
             aiMessage.innerHTML = `
-                <p><strong>💡 Tutor de Codex Academy (Modo Offline):</strong></p>
+                <p><strong>Tutor de Codex Academy (Modo Offline):</strong></p>
                 <p>Revisa la teoría del módulo para verificar la sintaxis de las etiquetas, propiedades o funciones requeridas.</p>
                 <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.5rem;">Para recibir respuestas generadas en vivo con IA, configura tu <em>Gemini API Key</em> en el campo de configuración superior.</p>
             `;
@@ -2374,7 +2374,7 @@ function renderGrades() {
     if (completedList.length === 1600) {
         gradesCertBanner.innerHTML = `
             <div class="card" style="border: 2px solid var(--accent); background: rgba(139, 92, 246, 0.08); text-align:center; padding: 1.5rem;">
-                <h3>🎓 ¡Has completado todas las 1600 etapas del curso!</h3>
+                <h3>¡Has completado todas las 1600 etapas del curso!</h3>
                 <p style="margin: 0.5rem 0 1rem 0;">Tu diploma oficial de graduación está listo para su emisión.</p>
                 <button class="btn btn-primary" onclick="switchView('certificate-view')">Ver mi Certificado</button>
             </div>
@@ -2382,7 +2382,7 @@ function renderGrades() {
     } else {
         gradesCertBanner.innerHTML = `
             <p style="color: var(--text-muted); font-size: 0.9rem;">
-                🔓 Completa las 1600 etapas curriculares de Codex Academy para desbloquear tu certificado oficial.
+                Completa las 1600 etapas curriculares de Codex Academy para desbloquear tu certificado oficial.
             </p>
         `;
     }
